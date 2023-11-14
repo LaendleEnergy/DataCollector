@@ -30,7 +30,7 @@ public class Test {
         return message.ack();
     }
 
-    //4 Byte Timestamp,
+
     public String parseData(byte[] message) {
 
         System.out.println(message.length);

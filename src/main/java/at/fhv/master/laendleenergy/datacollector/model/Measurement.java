@@ -2,6 +2,7 @@ package at.fhv.master.laendleenergy.datacollector;
 
 import java.time.LocalDateTime;
 
+@Entity
 public class MQTTMessage {
     private LocalDateTime timestamp;
     private float currentL1A;
