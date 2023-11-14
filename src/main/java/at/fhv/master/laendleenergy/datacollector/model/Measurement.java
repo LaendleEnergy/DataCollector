@@ -29,6 +29,10 @@ public class Measurement  {
     private float totalEnergyConsumedWh;
     private float totalEnergyDeliveredWh;
 
+    public Measurement() {
+
+    }
+
     public Measurement(LocalDateTime timestamp, float currentL1A, float currentL2A, float currentL3A,
                        float voltageL1V, float voltageL2V, float voltageL3V,
                        float instantaneousActivePowerPlusW, float instantaneousActivePowerMinusW,
@@ -92,6 +96,54 @@ public class Measurement  {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setCurrentL1A(float currentL1A) {
+        this.currentL1A = currentL1A;
+    }
+
+    public void setCurrentL2A(float currentL2A) {
+        this.currentL2A = currentL2A;
+    }
+
+    public void setCurrentL3A(float currentL3A) {
+        this.currentL3A = currentL3A;
+    }
+
+    public void setVoltageL1V(float voltageL1V) {
+        this.voltageL1V = voltageL1V;
+    }
+
+    public void setVoltageL2V(float voltageL2V) {
+        this.voltageL2V = voltageL2V;
+    }
+
+    public void setVoltageL3V(float voltageL3V) {
+        this.voltageL3V = voltageL3V;
+    }
+
+    public void setInstantaneousActivePowerPlusW(float instantaneousActivePowerPlusW) {
+        this.instantaneousActivePowerPlusW = instantaneousActivePowerPlusW;
+    }
+
+    public void setInstantaneousActivePowerMinusW(float instantaneousActivePowerMinusW) {
+        this.instantaneousActivePowerMinusW = instantaneousActivePowerMinusW;
+    }
+
+    public void setTotalEnergyConsumedWh(float totalEnergyConsumedWh) {
+        this.totalEnergyConsumedWh = totalEnergyConsumedWh;
+    }
+
+    public void setTotalEnergyDeliveredWh(float totalEnergyDeliveredWh) {
+        this.totalEnergyDeliveredWh = totalEnergyDeliveredWh;
     }
 
     @Override
