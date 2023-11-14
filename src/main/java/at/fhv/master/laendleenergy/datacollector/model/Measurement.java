@@ -1,9 +1,21 @@
-package at.fhv.master.laendleenergy.datacollector;
+package at.fhv.master.laendleenergy.datacollector.model;
+
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-public class MQTTMessage {
+
+public class Measurement  {
+
+    @Embeddable
+    static class MeasurementPK implements Serializable {
+        private String deviceId;
+        private LocalDateTime timestamp;
+    }
+
+    @EmbeddedId
+    private MeasurementPK id;
+    private String deviceId;
     private LocalDateTime timestamp;
     private float currentL1A;
     private float currentL2A;
@@ -16,7 +28,7 @@ public class MQTTMessage {
     private float totalEnergyConsumedWh;
     private float totalEnergyDeliveredWh;
 
-    public MQTTMessage(LocalDateTime timestamp, float currentL1A, float currentL2A, float currentL3A,
+    public Measurement(LocalDateTime timestamp, float currentL1A, float currentL2A, float currentL3A,
                        float voltageL1V, float voltageL2V, float voltageL3V,
                        float instantaneousActivePowerPlusW, float instantaneousActivePowerMinusW,
                        float totalEnergyConsumedWh, float totalEnergyDeliveredWh) {
@@ -75,6 +87,10 @@ public class MQTTMessage {
 
     public float getTotalEnergyDeliveredWh() {
         return totalEnergyDeliveredWh;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
     }
 
     @Override

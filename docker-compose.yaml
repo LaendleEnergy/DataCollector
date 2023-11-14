@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  datacollector:
+    container_name: data_collector
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.native
+    ports:
+      - "8080:8080"
+    networks:
+      - datacollector
+
+  database:
+    container_name: database
+    image: timescale/timescaledb:latest-pg14
+    environment:
+      - POSTGRES_DB=datacollectordb
+      - POSTGRES_USER=quarkus
+      - POSTGRES_PASSWORD=quarkus
+    networks:
+      - datacollector
+    ports:
+      - "5432:5432"
