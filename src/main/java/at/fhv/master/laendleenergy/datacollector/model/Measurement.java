@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 
 public class Measurement  {
 
-    @Embeddable
+    /*@Embeddable
     static class MeasurementPK implements Serializable {
         private String deviceId;
         private LocalDateTime timestamp;
-    }
+    }*/
 
-    @EmbeddedId
-    private MeasurementPK id;
+   // @EmbeddedId
+    //private MeasurementPK id;
     private String deviceId;
     private LocalDateTime timestamp;
     private float currentL1A;
