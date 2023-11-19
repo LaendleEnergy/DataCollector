@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
+@Entity
+@Table(name = "measurement")
 public class Measurement  {
 
     /*@Embeddable
@@ -16,18 +19,33 @@ public class Measurement  {
 
    // @EmbeddedId
     //private MeasurementPK id;
+    @Id
+    @Column(name = "device_id")
     private String deviceId;
+    @Id
     private LocalDateTime timestamp;
+    @Column(name="current_l1a")
     private float currentL1A;
+    @Column(name="current_l2a")
     private float currentL2A;
+    @Column(name="current_l3a")
     private float currentL3A;
+    @Column(name="current_l1v")
     private float voltageL1V;
+    @Column(name="current_l2v")
     private float voltageL2V;
+    @Column(name="current_l3v")
     private float voltageL3V;
+    @Column(name="instantaneous_active_power_plus_w")
     private float instantaneousActivePowerPlusW;
+    @Column(name="instantaneous_active_power_minus_w")
     private float instantaneousActivePowerMinusW;
+    @Column(name="total_energy_consumed_wh")
     private float totalEnergyConsumedWh;
+    @Column(name="total_energy_delivered_wh")
     private float totalEnergyDeliveredWh;
+    @OneToMany
+    private List<Tag> tags;
 
     public Measurement() {
 
@@ -161,5 +179,9 @@ public class Measurement  {
                 ", totalEnergyConsumedWh=" + totalEnergyConsumedWh +
                 ", totalEnergyDeliveredWh=" + totalEnergyDeliveredWh +
                 '}';
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
     }
 }

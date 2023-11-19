@@ -14,7 +14,7 @@ public class StartupService {
     MeasurementRepository measurementRepository;
 
     void initTable(@Observes StartupEvent event) {
-        measurementRepository.createMeasurementTable();
+        //measurementRepository.createMeasurementTable();
         measurementRepository.createUniqueIndexOnMeasurementTable();
         measurementRepository.convertMeasurementTableToHyperTable();
     }

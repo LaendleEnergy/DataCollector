@@ -7,6 +7,9 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
+import org.postgresql.core.NativeQuery;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +56,6 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                 "  number_partitions => 10);").getResultList();
     }
 
-
     @Transactional
     public void saveMeasurement(Measurement measurement){
         Query query = eM.createNativeQuery(
@@ -76,4 +78,14 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
         query.executeUpdate();
     }
 
+    public List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime) {
+        List<Measurement> measurements = eM.createQuery("FROM Measurement" +
+                        " WHERE timestamp >= :startTime AND timestamp <= :endTime" +
+                        " AND deviceId = :deviceId", Measurement.class)
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", endTime)
+                .setParameter("deviceId", deviceId)
+                .getResultList();
+        return measurements;
+    }
 }

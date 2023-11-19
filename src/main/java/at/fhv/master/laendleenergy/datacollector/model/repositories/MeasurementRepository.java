@@ -1,22 +1,17 @@
-package at.fhv.master.laendleenergy.datacollector.application;
+package at.fhv.master.laendleenergy.datacollector.model.repositories;
 
+import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 
-import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
-import io.quarkus.runtime.StartupEvent;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
-@ApplicationScoped
-public class StartupService {
+public interface MeasurementRepository {
+    Optional<Measurement> getMeasurementByDeviceIdAndTimeStamp();
+    void saveMeasurement(Measurement measurement);
+    void createMeasurementTable();
+    void createUniqueIndexOnMeasurementTable();
+    void convertMeasurementTableToHyperTable();
 
-    @Inject
-    MeasurementRepository measurementRepository;
-
-    void initTable(@Observes StartupEvent event) {
-        measurementRepository.createMeasurementTable();
-        measurementRepository.createUniqueIndexOnMeasurementTable();
-        measurementRepository.convertMeasurementTableToHyperTable();
-    }
-
+    List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime);
 }
