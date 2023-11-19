@@ -12,17 +12,13 @@ public class Tag {
     @ManyToOne
     DeviceCategory deviceCategory;
     @Id
-    @Column(name = "fk_device_id")
-    String deviceId;
-    @Id
-    @Column(name = "fk_measurement_timestamp")
-    LocalDateTime measurementTimeStamp;
+    @ManyToOne
+    Measurement measurement;
 
-    public Tag(String name, DeviceCategory deviceCategory, String deviceId, LocalDateTime measurementTimeStamp) {
+    public Tag(String name, DeviceCategory deviceCategory, Measurement measurement) {
         this.name = name;
         this.deviceCategory = deviceCategory;
-        this.deviceId = deviceId;
-        this.measurementTimeStamp = measurementTimeStamp;
+        this.measurement = measurement;
     }
 
     protected Tag() { }

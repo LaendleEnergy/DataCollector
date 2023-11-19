@@ -10,6 +10,8 @@ import at.fhv.master.laendleenergy.datacollector.model.repositories.DeviceCatego
 import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
 import java.util.Optional;
 
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     DeviceCategoryRepository deviceCategoryRepository;
 
     @Override
+    @Transactional
     public void addTag(LocalDateTime startTime, LocalDateTime endTime, String deviceId,
                        String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException {
         List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(deviceId, startTime, endTime);
@@ -41,8 +44,9 @@ public class MeasurementServiceImpl implements MeasurementService {
         }
 
         for(Measurement measurement : measurements){
-            Tag tag = new Tag(caption, deviceCategoryOptional.get(), deviceId, measurement.getTimestamp());
+            Tag tag = new Tag(caption, deviceCategoryOptional.get(), measurement);
             measurement.addTag(tag);
+            measurementRepository.saveChanges(measurement);
         }
     }
 }

@@ -59,7 +59,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     @Transactional
     public void saveMeasurement(Measurement measurement){
         Query query = eM.createNativeQuery(
-                "INSERT INTO measurement (user_id, timestamp, current_l1a, current_l2a, current_l3a," +
+                "INSERT INTO measurement (device_id, timestamp, current_l1a, current_l2a, current_l3a," +
                         " voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w," +
                         " total_energy_consumed_wh, total_energy_delivered_wh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
@@ -87,5 +87,10 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                 .setParameter("deviceId", deviceId)
                 .getResultList();
         return measurements;
+    }
+
+
+    public void saveChanges(Measurement measurement){
+        eM.persist(measurement);
     }
 }

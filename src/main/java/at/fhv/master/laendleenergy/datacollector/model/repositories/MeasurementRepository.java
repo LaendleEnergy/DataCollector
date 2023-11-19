@@ -12,6 +12,6 @@ public interface MeasurementRepository {
     void createMeasurementTable();
     void createUniqueIndexOnMeasurementTable();
     void convertMeasurementTableToHyperTable();
-
+    void saveChanges(Measurement measurement);
     List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime);
 }
