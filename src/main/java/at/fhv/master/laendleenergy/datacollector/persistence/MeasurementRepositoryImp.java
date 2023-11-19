@@ -80,8 +80,8 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     public List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime) {
         List<Measurement> measurements = eM.createQuery("FROM Measurement" +
-                        " WHERE timestamp >= :startTime AND timestamp <= :endTime" +
-                        " AND deviceId = :deviceId", Measurement.class)
+                        " WHERE measurementId.timestamp >= :startTime AND measurementId.timestamp <= :endTime" +
+                        " AND measurementId.deviceId = :deviceId", Measurement.class)
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
                 .setParameter("deviceId", deviceId)

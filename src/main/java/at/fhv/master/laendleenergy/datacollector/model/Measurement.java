@@ -62,7 +62,7 @@ public class Measurement {
     }
 
     public LocalDateTime getTimestamp() {
-        return measurementId.timestamp;
+        return measurementId.getTimestamp();
     }
 
     public float getCurrentL1A() {
@@ -106,7 +106,7 @@ public class Measurement {
     }
 
     public String getDeviceId() {
-        return measurementId.deviceId;
+        return measurementId.getDeviceId();
     }
 
     public void setCurrentL1A(float currentL1A) {
@@ -152,7 +152,7 @@ public class Measurement {
     @Override
     public String toString() {
         return "MQTTMessage{" +
-                "timestamp=" + measurementId.timestamp +
+                "timestamp=" + measurementId.getTimestamp() +
                 ", currentL1A=" + currentL1A +
                 ", currentL2A=" + currentL2A +
                 ", currentL3A=" + currentL3A +
@@ -169,52 +169,4 @@ public class Measurement {
     public void addTag(Tag tag) {
         tags.add(tag);
     }
-
-
-    @Embeddable
-    public class MeasurementId implements Serializable {
-
-        @Column(name = "device_id")
-        private String deviceId;
-        @Column(columnDefinition = "timestamptz")
-        private LocalDateTime timestamp;
-
-        public MeasurementId() {
-        }
-
-        public MeasurementId(String deviceId, LocalDateTime timestamp) {
-            this.deviceId = deviceId;
-            this.timestamp = timestamp;
-        }
-
-        public String getDeviceId() {
-            return deviceId;
-        }
-
-        public LocalDateTime getTimestamp() {
-            return timestamp;
-        }
-
-        public void setDeviceId(String deviceId) {
-            this.deviceId = deviceId;
-        }
-
-        public void setTimestamp(LocalDateTime timestamp) {
-            this.timestamp = timestamp;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            MeasurementId that = (MeasurementId) o;
-            return Objects.equals(deviceId, that.deviceId) && that.timestamp.equals(timestamp);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(deviceId, timestamp);
-        }
-    }
-
 }
