@@ -5,46 +5,38 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
 @Table(name = "measurement")
-public class Measurement  {
+public class Measurement {
 
-    /*@Embeddable
-    static class MeasurementPK implements Serializable {
-        private String deviceId;
-        private LocalDateTime timestamp;
-    }*/
 
-   // @EmbeddedId
-    //private MeasurementPK id;
-    @Id
-    @Column(name = "device_id")
-    private String deviceId;
-    @Id
-    private LocalDateTime timestamp;
-    @Column(name="current_l1a")
+    @EmbeddedId
+    MeasurementId measurementId;
+
+    @Column(name = "current_l1a")
     private float currentL1A;
-    @Column(name="current_l2a")
+    @Column(name = "current_l2a")
     private float currentL2A;
-    @Column(name="current_l3a")
+    @Column(name = "current_l3a")
     private float currentL3A;
-    @Column(name="current_l1v")
+    @Column(name = "current_l1v")
     private float voltageL1V;
-    @Column(name="current_l2v")
+    @Column(name = "current_l2v")
     private float voltageL2V;
-    @Column(name="current_l3v")
+    @Column(name = "current_l3v")
     private float voltageL3V;
-    @Column(name="instantaneous_active_power_plus_w")
+    @Column(name = "instantaneous_active_power_plus_w")
     private float instantaneousActivePowerPlusW;
-    @Column(name="instantaneous_active_power_minus_w")
+    @Column(name = "instantaneous_active_power_minus_w")
     private float instantaneousActivePowerMinusW;
-    @Column(name="total_energy_consumed_wh")
+    @Column(name = "total_energy_consumed_wh")
     private float totalEnergyConsumedWh;
-    @Column(name="total_energy_delivered_wh")
+    @Column(name = "total_energy_delivered_wh")
     private float totalEnergyDeliveredWh;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Tag> tags;
 
     public Measurement() {
@@ -55,7 +47,8 @@ public class Measurement  {
                        float voltageL1V, float voltageL2V, float voltageL3V,
                        float instantaneousActivePowerPlusW, float instantaneousActivePowerMinusW,
                        float totalEnergyConsumedWh, float totalEnergyDeliveredWh) {
-        this.timestamp = timestamp;
+        //todo: deviceId logic
+        this.measurementId = new MeasurementId("1", timestamp);
         this.currentL1A = currentL1A;
         this.currentL2A = currentL2A;
         this.currentL3A = currentL3A;
@@ -69,7 +62,7 @@ public class Measurement  {
     }
 
     public LocalDateTime getTimestamp() {
-        return timestamp;
+        return measurementId.timestamp;
     }
 
     public float getCurrentL1A() {
@@ -113,15 +106,7 @@ public class Measurement  {
     }
 
     public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+        return measurementId.deviceId;
     }
 
     public void setCurrentL1A(float currentL1A) {
@@ -167,7 +152,7 @@ public class Measurement  {
     @Override
     public String toString() {
         return "MQTTMessage{" +
-                "timestamp=" + timestamp +
+                "timestamp=" + measurementId.timestamp +
                 ", currentL1A=" + currentL1A +
                 ", currentL2A=" + currentL2A +
                 ", currentL3A=" + currentL3A +
@@ -184,4 +169,52 @@ public class Measurement  {
     public void addTag(Tag tag) {
         tags.add(tag);
     }
+
+
+    @Embeddable
+    public class MeasurementId implements Serializable {
+
+        @Column(name = "device_id")
+        private String deviceId;
+        @Column(columnDefinition = "timestamptz")
+        private LocalDateTime timestamp;
+
+        public MeasurementId() {
+        }
+
+        public MeasurementId(String deviceId, LocalDateTime timestamp) {
+            this.deviceId = deviceId;
+            this.timestamp = timestamp;
+        }
+
+        public String getDeviceId() {
+            return deviceId;
+        }
+
+        public LocalDateTime getTimestamp() {
+            return timestamp;
+        }
+
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+        }
+
+        public void setTimestamp(LocalDateTime timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MeasurementId that = (MeasurementId) o;
+            return Objects.equals(deviceId, that.deviceId) && that.timestamp.equals(timestamp);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(deviceId, timestamp);
+        }
+    }
+
 }

@@ -2,7 +2,6 @@ package at.fhv.master.laendleenergy.datacollector.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 
 @Entity
 public class Tag {
