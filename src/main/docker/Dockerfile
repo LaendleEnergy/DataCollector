@@ -4,21 +4,20 @@ WORKDIR /app
 
 COPY . .
 
-RUN ls docker-compose.yaml
-RUN ./gradlew clean
-RUN ./gradlew build -Dquarkus.package.type=native
+RUN gradle clean build
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.8 AS base
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
 
-WORKDIR /work/
+ENV LANGUAGE='en_US:en'
 
-COPY --from=build build/*-runner /work/application
-
-RUN chown 1001 /work \
-    && chmod "g+rwX" /work \
-    && chown 1001:root /work
+COPY --from=build --chown=185 /app/build/quarkus-app/lib/ /deployments/lib/
+COPY --from=build --chown=185 /app/build/quarkus-app/*.jar /deployments/
+COPY --from=build --chown=185 /app/build/quarkus-app/app/ /deployments/app/
+COPY --from=build --chown=185 /app/build/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
-USER 1001
+USER 185
+ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
 
-ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]
+ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]

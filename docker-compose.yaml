@@ -5,7 +5,7 @@ services:
     container_name: data_collector
     build:
       context: .
-      dockerfile: src/main/docker/Dockerfile.jvm
+      dockerfile: src/main/docker/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
