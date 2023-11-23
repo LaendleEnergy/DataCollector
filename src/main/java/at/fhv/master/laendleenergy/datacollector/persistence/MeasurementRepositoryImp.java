@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.postgresql.core.NativeQuery;
+import at.fhv.master.laendleenergy.datacollector.model.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +27,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     @Transactional
     public void createMeasurementTable(){
         eM.createNativeQuery("CREATE TABLE measurement(" +
-                "timestamp TIMESTAMPTZ NOT NULL," +
+                "time TIMESTAMPTZ NOT NULL," +
                 "device_id varchar(255), " +
                 "current_l1a float, " +
                 "current_l2a float, " +
@@ -46,20 +47,20 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     @Transactional
     public void createUniqueIndexOnMeasurementTable(){
         eM.createNativeQuery("CREATE UNIQUE INDEX idx_timestamp_device_id " +
-                "  ON measurement(device_id, timestamp);").executeUpdate();
+                "  ON measurement(device_id, time);").executeUpdate();
     }
 
 
     @Transactional
     public void convertMeasurementTableToHyperTable(){
-        List<Object> result = eM.createNativeQuery("SELECT create_hypertable('measurement', 'timestamp',  partitioning_column => 'device_id', " +
+        List<Object> result = eM.createNativeQuery("SELECT create_hypertable('measurement', 'time',  partitioning_column => 'device_id', " +
                 "  number_partitions => 10);").getResultList();
     }
 
     @Transactional
     public void saveMeasurement(Measurement measurement){
         Query query = eM.createNativeQuery(
-                "INSERT INTO measurement (device_id, timestamp, current_l1a, current_l2a, current_l3a," +
+                "INSERT INTO measurement (device_id, time, current_l1a, current_l2a, current_l3a," +
                         " voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w," +
                         " total_energy_consumed_wh, total_energy_delivered_wh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
@@ -80,17 +81,32 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     public List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime) {
         List<Measurement> measurements = eM.createQuery("FROM Measurement" +
-                        " WHERE measurementId.timestamp >= :startTime AND measurementId.timestamp <= :endTime" +
+                        " WHERE measurementId.time >= :startTime AND measurementId.time <= :endTime" +
                         " AND measurementId.deviceId = :deviceId", Measurement.class)
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
                 .setParameter("deviceId", deviceId)
                 .getResultList();
+        for(Measurement measurement : measurements){
+            List<Tag> tags = eM.createQuery("FROM Tag" +
+                    " WHERE measurementTimestamp = :time " +
+                    " AND measurementDeviceId = :deviceId ",
+                    Tag.class)
+                    .setParameter("time", measurement.getTimestamp())
+                    .setParameter("deviceId", measurement.getDeviceId())
+                    .getResultList();
+            for(Tag tag : tags){
+                measurement.addTag(tag);
+            }
+        }
         return measurements;
     }
 
 
     public void saveChanges(Measurement measurement){
         eM.persist(measurement);
+        for (at.fhv.master.laendleenergy.datacollector.model.Tag tag : measurement.getTags()){
+            eM.persist(tag);
+        }
     }
 }

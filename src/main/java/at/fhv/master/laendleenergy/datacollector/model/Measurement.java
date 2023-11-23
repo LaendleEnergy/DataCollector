@@ -1,9 +1,8 @@
 package at.fhv.master.laendleenergy.datacollector.model;
 
 import jakarta.persistence.*;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,8 +35,9 @@ public class Measurement {
     private float totalEnergyConsumedWh;
     @Column(name = "total_energy_delivered_wh")
     private float totalEnergyDeliveredWh;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Tag> tags;
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "measurement")
+    @Transient
+    private List<Tag> tags = new ArrayList<>();;
 
     public Measurement() {
 
@@ -48,7 +48,7 @@ public class Measurement {
                        float instantaneousActivePowerPlusW, float instantaneousActivePowerMinusW,
                        float totalEnergyConsumedWh, float totalEnergyDeliveredWh) {
         //todo: deviceId logic
-        this.measurementId = new MeasurementId("1", timestamp);
+        this.measurementId = new MeasurementId(1, timestamp);
         this.currentL1A = currentL1A;
         this.currentL2A = currentL2A;
         this.currentL3A = currentL3A;
@@ -63,6 +63,11 @@ public class Measurement {
 
     public LocalDateTime getTimestamp() {
         return measurementId.getTimestamp();
+    }
+
+
+    public List<at.fhv.master.laendleenergy.datacollector.model.Tag> getTags() {
+        return tags;
     }
 
     public float getCurrentL1A() {
@@ -105,7 +110,7 @@ public class Measurement {
         return totalEnergyDeliveredWh;
     }
 
-    public String getDeviceId() {
+    public int getDeviceId() {
         return measurementId.getDeviceId();
     }
 
@@ -168,5 +173,20 @@ public class Measurement {
 
     public void addTag(Tag tag) {
         tags.add(tag);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Measurement that = (Measurement) o;
+
+        return Objects.equals(measurementId, that.measurementId);
+    }
+
+    @Override
+    public int hashCode() {
+        return measurementId != null ? measurementId.hashCode() : 0;
     }
 }
