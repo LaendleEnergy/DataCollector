@@ -1,5 +1,6 @@
 package at.fhv.master.laendleenergy.datacollector.model.repositories;
 
+import at.fhv.master.laendleenergy.datacollector.controller.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 
 import java.time.LocalDateTime;
@@ -14,4 +15,5 @@ public interface MeasurementRepository {
     void convertMeasurementTableToHyperTable();
     void saveChanges(Measurement measurement);
     List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime);
+
 }

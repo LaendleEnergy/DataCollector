@@ -21,11 +21,11 @@ public class Measurement {
     private float currentL2A;
     @Column(name = "current_l3a")
     private float currentL3A;
-    @Column(name = "current_l1v")
+    @Column(name = "voltage_l1v")
     private float voltageL1V;
-    @Column(name = "current_l2v")
+    @Column(name = "voltage_l2v")
     private float voltageL2V;
-    @Column(name = "current_l3v")
+    @Column(name = "voltage_l3v")
     private float voltageL3V;
     @Column(name = "instantaneous_active_power_plus_w")
     private float instantaneousActivePowerPlusW;

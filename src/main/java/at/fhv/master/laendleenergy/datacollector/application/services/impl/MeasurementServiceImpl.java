@@ -1,6 +1,8 @@
 package at.fhv.master.laendleenergy.datacollector.application.services.impl;
 
+import at.fhv.master.laendleenergy.datacollector.application.services.DTOMapper;
 import at.fhv.master.laendleenergy.datacollector.application.services.MeasurementService;
+import at.fhv.master.laendleenergy.datacollector.controller.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import at.fhv.master.laendleenergy.datacollector.model.Tag;
@@ -48,5 +50,14 @@ public class MeasurementServiceImpl implements MeasurementService {
             measurement.addTag(tag);
             measurementRepository.saveChanges(measurement);
         }
+    }
+
+    @Override
+    public List<MeasurementDTO> getMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+        //todo: retrieve deviceId from session (?)
+        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(
+                "1", startDate, endDate
+        );
+        return measurements.stream().map(DTOMapper::mapMeasurementToMeasurementDTO).toList();
     }
 }
