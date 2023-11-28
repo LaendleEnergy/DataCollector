@@ -12,9 +12,9 @@ import java.util.Objects;
 @Embeddable
 public class MeasurementId implements Serializable {
 
-    @Column(name = "time", columnDefinition = "timestamptz")
+    @Column(name = "timestamp", columnDefinition = "timestamptz")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime time;
+    private LocalDateTime timestamp;
     @Column(name = "device_id")
     private int deviceId;
 
@@ -24,7 +24,7 @@ public class MeasurementId implements Serializable {
 
     public MeasurementId(int deviceId, LocalDateTime timestamp) {
         this.deviceId = deviceId;
-        this.time = timestamp;
+        this.timestamp = timestamp;
     }
 
     public int getDeviceId() {
@@ -32,7 +32,7 @@ public class MeasurementId implements Serializable {
     }
 
     public LocalDateTime getTimestamp() {
-        return time;
+        return timestamp;
     }
 
     public void setDeviceId(int deviceId) {
@@ -40,7 +40,7 @@ public class MeasurementId implements Serializable {
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
-        this.time = timestamp;
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -48,11 +48,11 @@ public class MeasurementId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MeasurementId that = (MeasurementId) o;
-        return Objects.equals(deviceId, that.deviceId) && that.time.equals(time);
+        return Objects.equals(deviceId, that.deviceId) && that.timestamp.equals(timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deviceId, time);
+        return Objects.hash(deviceId, timestamp);
     }
 }
