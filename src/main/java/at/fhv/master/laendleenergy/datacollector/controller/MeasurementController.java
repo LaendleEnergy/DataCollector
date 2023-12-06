@@ -2,7 +2,6 @@ package at.fhv.master.laendleenergy.datacollector.controller;
 
 
 import at.fhv.master.laendleenergy.datacollector.application.services.MeasurementService;
-import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryNotFoundException;
 import at.fhv.master.laendleenergy.datacollector.model.exception.MeasurementNotFoundException;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,7 +10,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -26,7 +24,19 @@ public class MeasurementController {
     public RestResponse<List<MeasurementDTO>> getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate){
-        return RestResponse.ok(measurementService.getMeasurementsBetweenDates(startDate, endDate));
+        return RestResponse.ok(
+                measurementService.getMeasurementsBetweenDates(startDate, endDate)
+        );
+    }
+
+    @GetMapping("/averaged/")
+    public RestResponse<List<AverageMeasurementDTO>> getMeasurementsBetweenDates(
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
+            @RequestParam("numberOfGroups") Integer numberOfGroups){
+        return RestResponse.ok(
+                measurementService.getAveragedMeasurementsBetweenDates(startDate, endDate, numberOfGroups)
+        );
     }
 
     @PostMapping("/tags/")

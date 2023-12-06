@@ -61,6 +61,7 @@ public class Measurement {
         this.totalEnergyDeliveredWh = totalEnergyDeliveredWh;
     }
 
+
     public LocalDateTime getTimestamp() {
         return measurementId.getTimestamp();
     }

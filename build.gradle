@@ -17,7 +17,6 @@ dependencies {
     implementation 'io.quarkus:quarkus-smallrye-reactive-messaging-mqtt'
     implementation("io.quarkus:quarkus-spring-web")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
-    compileOnly("org.projectlombok:lombok:1.16.10")
     testImplementation 'io.quarkus:quarkus-junit5'
 }
 

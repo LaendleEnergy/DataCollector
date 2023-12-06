@@ -2,7 +2,9 @@ package at.fhv.master.laendleenergy.datacollector.application.services.impl;
 
 import at.fhv.master.laendleenergy.datacollector.application.services.DTOMapper;
 import at.fhv.master.laendleenergy.datacollector.application.services.MeasurementService;
+import at.fhv.master.laendleenergy.datacollector.controller.AverageMeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.MeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import at.fhv.master.laendleenergy.datacollector.model.Tag;
@@ -14,6 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import java.time.LocalDateTime;
@@ -53,11 +56,22 @@ public class MeasurementServiceImpl implements MeasurementService {
     }
 
     @Override
+    public List<AverageMeasurementDTO> getAveragedMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate, int numberOfGroups) {
+        //todo: retrieve deviceId from session (?)
+        List<AveragedMeasurement> measurements = measurementRepository.getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(
+                "1", startDate, endDate, numberOfGroups
+        );
+        //return Collections.emptyList();
+        return measurements.stream().map(DTOMapper::mapAverageMeasurmentToAverageMeasurementDTO).toList();
+    }
+
+    @Override
     public List<MeasurementDTO> getMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
         //todo: retrieve deviceId from session (?)
-        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(
-                "1", startDate, endDate
-        );
-        return measurements.stream().map(DTOMapper::mapMeasurementToMeasurementDTO).toList();
+        return  measurementRepository
+                .getMeasurementsByDeviceIdAndStartAndEndTime("1", startDate, endDate)
+                .stream()
+                .map(DTOMapper::mapMeasurementToMeasurementDTO)
+                .toList();
     }
 }
