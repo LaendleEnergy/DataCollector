@@ -34,9 +34,11 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     @Transactional
-    public void addTag(LocalDateTime startTime, LocalDateTime endTime, String deviceId,
+    public void addTag(LocalDateTime startTime, LocalDateTime endTime,
                        String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException {
-        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(deviceId, startTime, endTime);
+
+        //todo fetch deviceid from session
+        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime("1", startTime, endTime);
 
         if(measurements.isEmpty()){
             throw new MeasurementNotFoundException();
@@ -73,5 +75,11 @@ public class MeasurementServiceImpl implements MeasurementService {
                 .stream()
                 .map(DTOMapper::mapMeasurementToMeasurementDTO)
                 .toList();
+    }
+
+    @Override
+    public List<String> getAllTagNames() {
+        //todo: retrieve deviceId from session
+        return measurementRepository.getAllLabelNamesByDeviceId("1");
     }
 }

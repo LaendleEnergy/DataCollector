@@ -1,8 +1,10 @@
 package at.fhv.master.laendleenergy.datacollector.application.services;
 
 import at.fhv.master.laendleenergy.datacollector.controller.AverageMeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.controller.DeviceCategoryDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
+import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 
 public class DTOMapper {
@@ -30,5 +32,11 @@ public class DTOMapper {
         );
 
         return averageMeasurementDTO;
+    }
+
+    public static DeviceCategoryDTO mapDeviceCategoryToDeviceCategoryDTO(DeviceCategory deviceCategory) {
+        DeviceCategoryDTO deviceCategoryDTO = new DeviceCategoryDTO(deviceCategory.getCategoryName(),
+                deviceCategory.getDescription());
+        return deviceCategoryDTO;
     }
 }

@@ -18,7 +18,7 @@ public class Tag {
     @Id
     LocalDateTime measurementTimestamp;
     @Id
-    Integer measurementDeviceId;
+    String measurementDeviceId;
 
     public Tag(String name, DeviceCategory deviceCategory, Measurement measurement) {
         this.name = name;

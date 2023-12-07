@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MeasurementService {
-    void addTag(LocalDateTime startTime, LocalDateTime endTime, String deviceId, String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException;
+    void addTag(LocalDateTime startTime, LocalDateTime endTime, String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException;
     List<AverageMeasurementDTO> getAveragedMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate, int numberGroups);
 
     List<MeasurementDTO> getMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
+
+    List<String> getAllTagNames();
 }

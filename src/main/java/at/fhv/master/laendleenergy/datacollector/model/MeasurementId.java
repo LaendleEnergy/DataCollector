@@ -16,18 +16,18 @@ public class MeasurementId implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
     @Column(name = "device_id")
-    private int deviceId;
+    private String deviceId;
 
 
     public MeasurementId() {
     }
 
-    public MeasurementId(int deviceId, LocalDateTime timestamp) {
+    public MeasurementId(String deviceId, LocalDateTime timestamp) {
         this.deviceId = deviceId;
         this.timestamp = timestamp;
     }
 
-    public int getDeviceId() {
+    public String getDeviceId() {
         return deviceId;
     }
 
@@ -35,7 +35,7 @@ public class MeasurementId implements Serializable {
         return timestamp;
     }
 
-    public void setDeviceId(int deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 

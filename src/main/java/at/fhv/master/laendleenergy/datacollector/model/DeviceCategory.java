@@ -12,4 +12,22 @@ public class DeviceCategory {
     String categoryName;
     @Column()
     String description;
+
+    public DeviceCategory(String categoryName, String description) {
+        this.categoryName = categoryName;
+        this.description = description;
+    }
+
+    public DeviceCategory() {
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+
 }

@@ -16,8 +16,6 @@ public class TagDto {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime endTime;
     @JsonProperty
-    String deviceId;
-    @JsonProperty
     String caption;
     @JsonProperty
     String deviceCategoryName;

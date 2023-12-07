@@ -20,6 +20,11 @@ public class MeasurementController {
     MeasurementService measurementService;
 
 
+    @GetMapping("/tags/names/all")
+    public RestResponse<List<String>> getTagNames(){
+        return RestResponse.ok(measurementService.getAllTagNames());
+    }
+
     @GetMapping("/")
     public RestResponse<List<MeasurementDTO>> getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
@@ -42,8 +47,7 @@ public class MeasurementController {
     @PostMapping("/tags/")
     public RestResponse<String> addTagToMeasurements(TagDto tag){
         try {
-            measurementService.addTag(tag.startTime, tag.endTime,
-                   tag.deviceId, tag.caption, tag.deviceCategoryName);
+            measurementService.addTag(tag.startTime, tag.endTime, tag.caption, tag.deviceCategoryName);
 
         } catch (DeviceCategoryNotFoundException | MeasurementNotFoundException e) {
             //todo: fix no string response

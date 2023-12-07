@@ -1,5 +1,6 @@
 package at.fhv.master.laendleenergy.datacollector.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Measurement {
 
 
     @EmbeddedId
+    @JsonProperty
     MeasurementId measurementId;
 
     @Column(name = "current_l1a")
@@ -48,7 +50,7 @@ public class Measurement {
                        float instantaneousActivePowerPlusW, float instantaneousActivePowerMinusW,
                        float totalEnergyConsumedWh, float totalEnergyDeliveredWh) {
         //todo: deviceId logic
-        this.measurementId = new MeasurementId(1, timestamp);
+        this.measurementId = new MeasurementId("1", timestamp);
         this.currentL1A = currentL1A;
         this.currentL2A = currentL2A;
         this.currentL3A = currentL3A;
@@ -111,7 +113,7 @@ public class Measurement {
         return totalEnergyDeliveredWh;
     }
 
-    public int getDeviceId() {
+    public String getDeviceId() {
         return measurementId.getDeviceId();
     }
 

@@ -10,8 +10,11 @@ import java.util.Optional;
 
 public interface MeasurementRepository {
 
+    List<String> getAllLabelNamesByDeviceId(String deviceId);
+
     List<AveragedMeasurement> getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime,
                                                                                    LocalDateTime endTime, int numberofGroups);
+
     Optional<Measurement> getMeasurementByDeviceIdAndTimeStamp();
     void saveMeasurement(Measurement measurement);
     void createMeasurementTable();

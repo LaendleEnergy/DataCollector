@@ -93,7 +93,8 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                 .setParameter("endTime", endTime)
                 .setParameter("deviceId", deviceId)
                 .getResultList();
-        for(Measurement measurement : measurements){
+        /*for(Measurement measurement : measurements){
+            //todo: fill up measurements
             List<Tag> tags = eM.createQuery("FROM Tag" +
                     " WHERE measurementTimestamp = :time " +
                     " AND measurementDeviceId = :deviceId ",
@@ -105,13 +106,26 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                 measurement.addTag(tag);
             }
         }
+        */
         return measurements;
     }
 
+    @Override
+    public List<String> getAllLabelNamesByDeviceId(String deviceId) {
+        return eM.createNativeQuery(" SELECT DISTINCT name" +
+                " FROM tag " +
+                        "WHERE measurementDeviceId = :deviceId"
+        )
+                .setParameter("deviceId", deviceId)
+                .getResultList()
+                .stream()
+                .toList();
+    }
+
     public List<AveragedMeasurement> getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(String deviceId,
-                                                                                            LocalDateTime startTime,
-                                                                                            LocalDateTime endTime,
-                                                                                            int numberOfGroups){
+                                                                                          LocalDateTime startTime,
+                                                                                          LocalDateTime endTime,
+                                                                                          int numberOfGroups){
         List<Object[]> measurements = eM.createNativeQuery(
                 "SELECT " +
                         "avg(current_l1a) as avg_current_l1a, " +
@@ -133,7 +147,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
         )
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
-                .setParameter("deviceId", Integer.valueOf(deviceId))
+                .setParameter("deviceId", deviceId)
                 .setParameter("numberOfGroups", numberOfGroups - 1)
                 .getResultList();
 
@@ -157,9 +171,9 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
 
     public void saveChanges(Measurement measurement){
-        eM.persist(measurement);
+        eM.merge(measurement);
         for (at.fhv.master.laendleenergy.datacollector.model.Tag tag : measurement.getTags()){
-            eM.persist(tag);
+            eM.merge(tag);
         }
     }
 }
