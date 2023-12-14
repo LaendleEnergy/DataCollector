@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 
-@Entity
+//@Entity
 public class Tag {
     @Id
     String name;
@@ -16,14 +16,15 @@ public class Tag {
     //@ManyToOne
     //Measurement measurement;
     @Id
-    LocalDateTime measurementTimestamp;
+    @Column(name = "measurement_reading_time")
+    LocalDateTime measurementReadingTime;
     @Id
     String measurementDeviceId;
 
     public Tag(String name, DeviceCategory deviceCategory, Measurement measurement) {
         this.name = name;
         this.deviceCategory = deviceCategory;
-        this.measurementTimestamp = measurement.getTimestamp();
+        this.measurementReadingTime = measurement.getTimestamp();
         this.measurementDeviceId = measurement.getDeviceId();
     }
 
@@ -41,14 +42,14 @@ public class Tag {
             return false;
         if (!Objects.equals(measurementDeviceId, tag.measurementDeviceId))
             return false;
-        return Objects.equals(measurementTimestamp, tag.measurementTimestamp);
+        return Objects.equals(measurementReadingTime, tag.measurementReadingTime);
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (deviceCategory != null ? deviceCategory.hashCode() : 0);
-        result = 31 * result + (measurementTimestamp != null ? measurementTimestamp.hashCode() : 0);
+        result = 31 * result + (measurementReadingTime != null ? measurementReadingTime.hashCode() : 0);
         result = 31 * result + (measurementDeviceId != null ? measurementDeviceId.hashCode() : 0);
         return result;
     }

@@ -12,7 +12,7 @@ import java.util.Objects;
 @Embeddable
 public class MeasurementId implements Serializable {
 
-    @Column(name = "timestamp", columnDefinition = "timestamptz")
+    @Column(name = "reading_time", columnDefinition = "timestamptz")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
     @Column(name = "device_id")

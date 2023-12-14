@@ -1,7 +1,11 @@
 package at.fhv.master.laendleenergy.datacollector.model;
 
+import at.fhv.master.laendleenergy.datacollector.model.usertypes.TagUserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Subselect;
+import org.hibernate.annotations.Type;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +13,8 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "measurement")
+@Table(name = "measurement_w_t")
+@Subselect("select * from measurement_w_t")
 public class Measurement {
 
 
@@ -38,6 +43,8 @@ public class Measurement {
     @Column(name = "total_energy_delivered_wh")
     private float totalEnergyDeliveredWh;
     //@OneToMany(cascade = CascadeType.ALL, mappedBy = "measurement")
+    //@Column(name = "tags")
+    //@Type(value = TagUserType.class)
     @Transient
     private List<Tag> tags = new ArrayList<>();;
 
