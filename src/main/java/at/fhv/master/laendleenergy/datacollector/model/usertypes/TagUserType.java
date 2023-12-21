@@ -52,16 +52,14 @@ public class TagUserType extends ListArrayType {
         else{
             List<String> arr = new ArrayList<>();
             for (int i = 0; i < tagsList.size(); i++) {
-                StringBuffer jsonBuffer = new StringBuffer();
                 Tag tag = tagsList.get(i);
-                arr.add("(" + tag.getDeviceCategoryName() + ", \'" + tag.getName() + "\')");
-                //if(i < tagsList.size() - 1)
-                   // jsonBuffer.append(",");
+                String deviceCategoryName = tag.getDeviceCategoryName().contains(" ")
+                        ? "\'" + tag.getDeviceCategoryName() + "\'" : tag.getDeviceCategoryName();
+                String tagName = tag.getName().contains(" ")
+                        ? "\'" + tag.getName() + "\'" : tag.getName();
+                arr.add("(" + deviceCategoryName + "," + tagName + ")");
             }
             st.setArray(index, session.getJdbcConnectionAccess().obtainConnection().createArrayOf("TAG_RECORD", arr.toArray()));
-
-            //array[('washing_machine', 'Arschloch')]::TAG_RECORD[]
-            //st.setObject(index, jsonBuffer.toString(), SqlTypes.OTHER);
         }
     }
 
