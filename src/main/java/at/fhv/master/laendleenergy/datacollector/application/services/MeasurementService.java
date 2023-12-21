@@ -1,7 +1,7 @@
 package at.fhv.master.laendleenergy.datacollector.application.services;
 
-import at.fhv.master.laendleenergy.datacollector.controller.AverageMeasurementDTO;
-import at.fhv.master.laendleenergy.datacollector.controller.MeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.controller.dto.AverageMeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.controller.dto.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryNotFoundException;
 import at.fhv.master.laendleenergy.datacollector.model.exception.MeasurementNotFoundException;
 

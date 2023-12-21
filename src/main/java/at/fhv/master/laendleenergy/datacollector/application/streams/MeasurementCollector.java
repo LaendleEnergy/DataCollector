@@ -2,7 +2,9 @@ package at.fhv.master.laendleenergy.datacollector.application.streams;
 
 
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
+import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
@@ -14,12 +16,16 @@ import static at.fhv.master.laendleenergy.datacollector.application.MeasurementP
 @ApplicationScoped
 public class MeasurementCollector {
 
+
+    @Inject
+    MeasurementRepository measurementRepository;
+
     @Incoming("simulator")
     public CompletionStage<Void> processMeasurement(Message<String> message) {
         Optional<Measurement> measurement = parseData(message.getPayload());
 
         if(measurement.isPresent()){
-            //System.out.println(measurement.get().toString());
+            measurementRepository.saveChanges(measurement.get());
         }
         // Acknowledge the incoming message
         return message.ack();

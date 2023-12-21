@@ -1,6 +1,5 @@
 package at.fhv.master.laendleenergy.datacollector.model.repositories;
 
-import at.fhv.master.laendleenergy.datacollector.controller.DeviceCategoryDTO;
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 
 import java.util.List;

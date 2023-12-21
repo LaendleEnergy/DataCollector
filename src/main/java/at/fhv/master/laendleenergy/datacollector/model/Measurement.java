@@ -2,9 +2,13 @@ package at.fhv.master.laendleenergy.datacollector.model;
 
 import at.fhv.master.laendleenergy.datacollector.model.usertypes.TagUserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vladmihalcea.hibernate.type.array.ListArrayType;
+import jakarta.annotation.Generated;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Subselect;
-import org.hibernate.annotations.Type;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,10 +18,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "measurement_w_t")
-@Subselect("select * from measurement_w_t")
+//@Subselect("select * from measurement_w_t")
 public class Measurement {
-
-
     @EmbeddedId
     @JsonProperty
     MeasurementId measurementId;
@@ -42,11 +44,17 @@ public class Measurement {
     private float totalEnergyConsumedWh;
     @Column(name = "total_energy_delivered_wh")
     private float totalEnergyDeliveredWh;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "measurement")
-    //@Column(name = "tags")
-    //@Type(value = TagUserType.class)
-    @Transient
-    private List<Tag> tags = new ArrayList<>();;
+
+    @Type(value = TagUserType.class,
+            parameters = {
+            @Parameter(
+                    name = ListArrayType.SQL_ARRAY_TYPE,
+                    value = "tag"
+            )
+    }
+    )
+    @Column(name = "tags")
+    private List<Tag> tags = new ArrayList<>();
 
     public Measurement() {
 

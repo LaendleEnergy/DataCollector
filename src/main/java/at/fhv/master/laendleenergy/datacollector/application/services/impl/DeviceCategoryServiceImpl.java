@@ -2,7 +2,7 @@ package at.fhv.master.laendleenergy.datacollector.application.services.impl;
 
 import at.fhv.master.laendleenergy.datacollector.application.services.DTOMapper;
 import at.fhv.master.laendleenergy.datacollector.application.services.DeviceCategoryService;
-import at.fhv.master.laendleenergy.datacollector.controller.DeviceCategoryDTO;
+import at.fhv.master.laendleenergy.datacollector.controller.dto.DeviceCategoryDTO;
 import at.fhv.master.laendleenergy.datacollector.model.repositories.DeviceCategoryRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

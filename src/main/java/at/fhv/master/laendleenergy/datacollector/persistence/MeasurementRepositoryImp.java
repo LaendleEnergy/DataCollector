@@ -16,6 +16,7 @@ import at.fhv.master.laendleenergy.datacollector.model.Tag;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,9 +67,9 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     @Transactional
     public void saveMeasurement(Measurement measurement){
         Query query = eM.createNativeQuery(
-                "INSERT INTO measurement (device_id, time, current_l1a, current_l2a, current_l3a," +
+                "INSERT INTO measurement_w_t (device_id, time, current_l1a, current_l2a, current_l3a," +
                         " voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w," +
-                        " total_energy_consumed_wh, total_energy_delivered_wh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                        " total_energy_consumed_wh, total_energy_delivered_wh, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::TAG_RECORD[])"
         );
         query.setParameter(1, measurement.getDeviceId());
         query.setParameter(2, measurement.getTimestamp());
@@ -82,6 +83,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
         query.setParameter(10, measurement.getInstantaneousActivePowerMinusW());
         query.setParameter(11, measurement.getTotalEnergyConsumedWh());
         query.setParameter(12, measurement.getTotalEnergyDeliveredWh());
+        query.setParameter(13, measurement.getTags());
         query.executeUpdate();
     }
 
@@ -93,20 +95,6 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                 .setParameter("endTime", endTime)
                 .setParameter("deviceId", deviceId)
                 .getResultList();
-        /*for(Measurement measurement : measurements){
-            //todo: fill up measurements
-            List<Tag> tags = eM.createQuery("FROM Tag" +
-                    " WHERE measurementTimestamp = :time " +
-                    " AND measurementDeviceId = :deviceId ",
-                    Tag.class)
-                    .setParameter("time", measurement.getTimestamp())
-                    .setParameter("deviceId", measurement.getDeviceId())
-                    .getResultList();
-            for(Tag tag : tags){
-                measurement.addTag(tag);
-            }
-        }
-        */
         return measurements;
     }
 
@@ -124,8 +112,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     public List<AveragedMeasurement> getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(String deviceId,
                                                                                           LocalDateTime startTime,
-                                                                                          LocalDateTime endTime,
-                                                                                          int numberOfGroups){
+                                                                                          LocalDateTime endTime, int numberOfGroups){
         List<Object[]> measurements = eM.createNativeQuery(
                 "SELECT " +
                         "avg(current_l1a) as avg_current_l1a, " +
@@ -136,12 +123,12 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                         "avg(voltage_l3v) as avg_voltage_l3v, " +
                         "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
                         "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
-                        "MIN(timestamp) as t_start, MAX(timestamp) as t_end, " +
-                        "time_bucket(((SELECT MAX(timestamp) FROM measurement where timestamp <= :endTime) " +
-        " - (SELECT MIN(timestamp) FROM measurement where timestamp >= :startTime)) / :numberOfGroups, timestamp) as timestamp_start " +
+                        "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
+                        "time_bucket(((SELECT MAX(reading_time) FROM measurement where reading_time <= :endTime) " +
+        " - (SELECT MIN(reading_time) FROM measurement where reading_time >= :startTime)) / :numberOfGroups, timestamp) as timestamp_start " +
                 "FROM measurement " +
-                "WHERE timestamp <= :endTime " +
-                " and timestamp >= :startTime  " +
+                "WHERE reading_time <= :endTime " +
+                " and reading_time >= :startTime  " +
                 " and device_id = :deviceId " +
                 "GROUP BY timestamp_start"
         )
@@ -172,8 +159,5 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     public void saveChanges(Measurement measurement){
         eM.merge(measurement);
-        for (at.fhv.master.laendleenergy.datacollector.model.Tag tag : measurement.getTags()){
-            eM.merge(tag);
-        }
     }
 }

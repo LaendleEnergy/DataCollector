@@ -2,6 +2,9 @@ package at.fhv.master.laendleenergy.datacollector.controller;
 
 
 import at.fhv.master.laendleenergy.datacollector.application.services.MeasurementService;
+import at.fhv.master.laendleenergy.datacollector.controller.dto.AverageMeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.controller.dto.MeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.controller.dto.TagDTO;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryNotFoundException;
 import at.fhv.master.laendleenergy.datacollector.model.exception.MeasurementNotFoundException;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,12 +23,17 @@ public class MeasurementController {
     MeasurementService measurementService;
 
 
+    //@Inject
+    //JsonWebToken jwt;
+
     @GetMapping("/tags/names/all")
+    //@PermitAll
     public RestResponse<List<String>> getTagNames(){
         return RestResponse.ok(measurementService.getAllTagNames());
     }
 
     @GetMapping("/")
+    //@PermitAll
     public RestResponse<List<MeasurementDTO>> getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate){
@@ -35,6 +43,7 @@ public class MeasurementController {
     }
 
     @GetMapping("/averaged/")
+    //@PermitAll
     public RestResponse<List<AverageMeasurementDTO>> getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
@@ -45,9 +54,11 @@ public class MeasurementController {
     }
 
     @PostMapping("/tags/")
-    public RestResponse<String> addTagToMeasurements(TagDto tag){
+    //@PermitAll
+    public RestResponse<String> addTagToMeasurements(TagDTO tag){
         try {
-            measurementService.addTag(tag.startTime, tag.endTime, tag.caption, tag.deviceCategoryName);
+            measurementService.addTag(tag.getStartTime(), tag.getEndTime(),
+                    tag.getCaption(), tag.getDeviceCategoryName());
 
         } catch (DeviceCategoryNotFoundException | MeasurementNotFoundException e) {
             //todo: fix no string response

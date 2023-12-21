@@ -1,6 +1,5 @@
 package at.fhv.master.laendleenergy.datacollector.model.repositories;
 
-import at.fhv.master.laendleenergy.datacollector.controller.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 

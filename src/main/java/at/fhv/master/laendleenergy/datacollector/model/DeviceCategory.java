@@ -4,13 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-//@Entity
+@Entity
 public class DeviceCategory {
 
     @Id
     @Column(name = "category_name")
     String categoryName;
-    @Column()
+    @Column
     String description;
 
     public DeviceCategory(String categoryName, String description) {
