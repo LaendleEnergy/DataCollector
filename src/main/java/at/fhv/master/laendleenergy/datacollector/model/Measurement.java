@@ -18,7 +18,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "measurement_w_t")
-//@Subselect("select * from measurement_w_t")
 public class Measurement {
     @EmbeddedId
     @JsonProperty
