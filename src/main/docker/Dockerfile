@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN gradle clean build
+RUN gradle clean
+RUN gradle build
 
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
 
