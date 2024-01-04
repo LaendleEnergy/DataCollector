@@ -3,7 +3,6 @@ COPY --chown=gradle:gradle . /app
 WORKDIR /app
 USER gradle
 
-RUN gradle wrapper
 RUN gradle clean build
 
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
