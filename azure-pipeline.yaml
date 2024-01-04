@@ -36,6 +36,7 @@ stages:
                 inputs:
                   command: build
                   dockerfile: ${{ file.file }}
+                  buildContext: $(Build.SourcesDirectory)
   - stage: build_push
     condition: eq('${{ parameters.push }}', true)
     displayName: puild & push to ghcr.io/LaendleEnergy
@@ -51,3 +52,4 @@ stages:
                   command: 'buildAndPush'
                   dockerfile: ${{ file.file }}
                   tags: '${{ parameters.imagetag }}'
+                  buildContext: $(Build.SourcesDirectory)
