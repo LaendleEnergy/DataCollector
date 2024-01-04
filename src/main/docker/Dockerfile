@@ -1,7 +1,9 @@
 FROM gradle:8.3-jdk17-alpine AS build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+COPY --chown=gradle:gradle . /app
+WORKDIR /app
+USER gradle
+
+RUN sh -c './gradlew clean build --no-daemon'
 
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
 

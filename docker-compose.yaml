@@ -4,7 +4,7 @@ services:
   delayservice:
     image: busybox
     command: >
-      sh -c "echo 'Delaying datacollector startup for 180 seconds, waiting for database to be ready...'; sleep 60; echo 'Delay complete.'"
+      sh -c "echo 'Delaying datacollector startup for 180 seconds, waiting for database to be ready...'; sleep 180; echo 'Delay complete.'"
   datacollector:
     container_name: data_collector
     build:
