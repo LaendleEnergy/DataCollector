@@ -1,8 +1,10 @@
 package at.fhv.master.laendleenergy.datacollector.application.services;
 
+import at.fhv.master.laendleenergy.datacollector.controller.dto.AccumulatedMeasurementsDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.dto.AverageMeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.dto.DeviceCategoryDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.dto.MeasurementDTO;
+import at.fhv.master.laendleenergy.datacollector.model.AccumulatedMeasurements;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
@@ -33,6 +35,19 @@ public class DTOMapper {
 
         return averageMeasurementDTO;
     }
+
+    public static AccumulatedMeasurementsDTO mapAccumulatedMeasurementToAccumulatedMeasurementDTO(AccumulatedMeasurements accumulatedMeasurement){
+        AccumulatedMeasurementsDTO accumulatedMeasurementDTO = new AccumulatedMeasurementsDTO(
+                accumulatedMeasurement.getTimeStart(),
+                accumulatedMeasurement.getTimeEnd(),
+                accumulatedMeasurement.getDeviceId(),
+                accumulatedMeasurement.getEnergyConsumedWh(),
+                accumulatedMeasurement.getEnergyDeliveredWh(),
+                accumulatedMeasurement.getEnergyConsumedPriceEuro()
+        );
+        return accumulatedMeasurementDTO;
+    }
+
 
     public static DeviceCategoryDTO mapDeviceCategoryToDeviceCategoryDTO(DeviceCategory deviceCategory) {
         DeviceCategoryDTO deviceCategoryDTO = new DeviceCategoryDTO(deviceCategory.getCategoryName(),

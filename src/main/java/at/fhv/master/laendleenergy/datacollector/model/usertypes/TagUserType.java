@@ -19,7 +19,6 @@ public class TagUserType extends ListArrayType {
     public Object nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
         String json = rs.getString(position);
         if(json != null){
-            System.out.println();
             json = json.replaceAll("(?<=\\{)\\\"|\\\"(?=})|(\\\\)|(?<=\\))\\\"|\\\"(?=\\()", "");
             List<Tag> tags = parseTupleString(json);
             return tags;

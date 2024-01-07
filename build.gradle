@@ -21,6 +21,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-smallrye-jwt-build'
     implementation("io.quarkus:quarkus-smallrye-jwt")
     testImplementation 'io.quarkus:quarkus-junit5'
+    implementation("io.quarkus:quarkus-redis-client")
 }
 
 group 'at.fhv.master.laendleenergy'

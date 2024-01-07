@@ -1,22 +1,19 @@
 package at.fhv.master.laendleenergy.datacollector.persistence;
 
+import at.fhv.master.laendleenergy.datacollector.application.enums.Interval;
+import at.fhv.master.laendleenergy.datacollector.model.AccumulatedMeasurements;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
-import jakarta.ejb.Local;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.Column;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
-import org.postgresql.core.NativeQuery;
-import at.fhv.master.laendleenergy.datacollector.model.Tag;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +43,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                 "instantaneous_active_power_minus_w float, " +
                 "total_energy_consumed_wh float, " +
                 "total_energy_delivered_wh float, " +
-                "PRIMARY KEY (timestamp, device_id)" +
+                "PRIMARY KEY (time, device_id)" +
                 ");").executeUpdate();
 
     }
@@ -54,7 +51,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     @Transactional
     public void createUniqueIndexOnMeasurementTable(){
         eM.createNativeQuery("CREATE UNIQUE INDEX idx_timestamp_device_id " +
-                "  ON measurement(device_id, time);").executeUpdate();
+                "  ON measurement(device_id, reading_time);").executeUpdate();
     }
 
 
@@ -67,7 +64,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     @Transactional
     public void saveMeasurement(Measurement measurement){
         Query query = eM.createNativeQuery(
-                "INSERT INTO measurement_w_t (device_id, time, current_l1a, current_l2a, current_l3a," +
+                "INSERT INTO measurement_w_t (device_id, reading_time, current_l1a, current_l2a, current_l3a," +
                         " voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w," +
                         " total_energy_consumed_wh, total_energy_delivered_wh, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::TAG_RECORD[])"
         );
@@ -98,16 +95,66 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
         return measurements;
     }
 
+
     @Override
     public List<String> getAllLabelNamesByDeviceId(String deviceId) {
         return eM.createNativeQuery(" SELECT DISTINCT name" +
                 " FROM tag " +
-                        "WHERE measurementDeviceId = :deviceId"
+                        "WHERE measurement_device_id = :deviceId"
         )
                 .setParameter("deviceId", deviceId)
                 .getResultList()
                 .stream()
                 .toList();
+    }
+
+    public List<AveragedMeasurement> getAveragedMeasurementsByDeviceIdAndStartAndEndTimeAndInterval(String deviceId,
+                                                                                                    LocalDateTime startTime,
+                                                                                                    LocalDateTime endTime,
+                                                                                                    int numberOfGroups,
+                                                                                                    Interval interval
+    ){
+        List<Object[]> measurements = eM.createNativeQuery(
+                        "SELECT " +
+                                "avg(current_l1a) as avg_current_l1a, " +
+                                "avg(current_l2a) as avg_current_l2a, " +
+                                "avg(current_l3a) as avg_current_l3a, " +
+                                "avg(voltage_l1v) as avg_voltage_l1v, " +
+                                "avg(voltage_l2v) as avg_voltage_l2v, " +
+                                "avg(voltage_l3v) as avg_voltage_l3v, " +
+                                "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
+                                "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
+                                "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
+                                "time_bucket(((SELECT MAX(reading_time) FROM measurement where reading_time <= :endTime) " +
+                                " - (SELECT MIN(reading_time) FROM measurement where reading_time >= :startTime)) / :numberOfGroups, reading_time) as timestamp_start " +
+                                "FROM measurement " +
+                                "WHERE reading_time <= :endTime " +
+                                " and reading_time >= :startTime  " +
+                                " and device_id = :deviceId " +
+                                "GROUP BY timestamp_start"
+                )
+                .setParameter("startTime", startTime)
+                .setParameter("endTime", endTime)
+                .setParameter("deviceId", deviceId)
+                .setParameter("numberOfGroups", numberOfGroups - 1)
+                .getResultList();
+
+
+
+        return measurements.stream().map(m -> {
+            float currentL1A = ((Double) m[0]).floatValue();
+            float currentL2A = ((Double) m[1]).floatValue();
+            float currentL3A = ((Double) m[2]).floatValue();
+            float voltageL1V = ((Double) m[3]).floatValue();
+            float voltageL2V = ((Double) m[4]).floatValue();
+            float voltageL3V = ((Double) m[5]).floatValue();
+            float instantaneousActivePowerPlusW = ((Double) m[6]).floatValue();
+            float instantaneousActivePowerMinusW = ((Double) m[7]).floatValue();
+            LocalDateTime timestampStart = LocalDateTime.ofInstant((Instant) m[8], ZoneId.systemDefault());
+            LocalDateTime timestampEnd = LocalDateTime.ofInstant((Instant) m[9], ZoneId.systemDefault());
+            return new AveragedMeasurement(timestampStart,timestampEnd, deviceId, currentL1A, currentL2A, currentL3A, voltageL1V, voltageL2V, voltageL3V,
+                    instantaneousActivePowerPlusW, instantaneousActivePowerMinusW);
+        }).toList();
     }
 
     public List<AveragedMeasurement> getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(String deviceId,
@@ -125,7 +172,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
                         "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
                         "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
                         "time_bucket(((SELECT MAX(reading_time) FROM measurement where reading_time <= :endTime) " +
-        " - (SELECT MIN(reading_time) FROM measurement where reading_time >= :startTime)) / :numberOfGroups, timestamp) as timestamp_start " +
+        " - (SELECT MIN(reading_time) FROM measurement where reading_time >= :startTime)) / :numberOfGroups, reading_time) as timestamp_start " +
                 "FROM measurement " +
                 "WHERE reading_time <= :endTime " +
                 " and reading_time >= :startTime  " +

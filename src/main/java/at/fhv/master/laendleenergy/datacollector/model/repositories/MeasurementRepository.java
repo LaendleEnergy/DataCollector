@@ -1,5 +1,7 @@
 package at.fhv.master.laendleenergy.datacollector.model.repositories;
 
+import at.fhv.master.laendleenergy.datacollector.application.enums.Interval;
+import at.fhv.master.laendleenergy.datacollector.model.AccumulatedMeasurements;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 
@@ -11,8 +13,6 @@ public interface MeasurementRepository {
 
     List<String> getAllLabelNamesByDeviceId(String deviceId);
 
-    List<AveragedMeasurement> getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime,
-                                                                                   LocalDateTime endTime, int numberofGroups);
 
     Optional<Measurement> getMeasurementByDeviceIdAndTimeStamp();
     void saveMeasurement(Measurement measurement);
