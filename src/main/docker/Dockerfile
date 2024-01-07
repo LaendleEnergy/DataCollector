@@ -1,10 +1,9 @@
-FROM gradle:jdk17-alpine AS build
-
+FROM gradle:8.3-jdk17-alpine AS build
+COPY --chown=gradle:gradle . /app
 WORKDIR /app
+USER gradle
 
-COPY . .
-
-RUN gradle clean build
+RUN gradle clean build --no-daemon
 
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
 
