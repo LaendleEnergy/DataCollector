@@ -3,6 +3,7 @@ package at.fhv.master.laendleenergy.datacollector.persistence;
 import at.fhv.master.laendleenergy.datacollector.application.enums.Interval;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.repositories.AverageMeasurementRepository;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+
+@ApplicationScoped
 public class AverageMeasurementRepositoryImp implements AverageMeasurementRepository {
 
     @Inject

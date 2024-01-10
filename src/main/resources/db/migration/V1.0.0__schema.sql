@@ -70,12 +70,14 @@ CREATE OR REPLACE FUNCTION insert_measurement_trigger_fkt()
         SELECT NEW.reading_time, NEW.device_id, NEW.current_l1a, NEW.current_l2a, NEW.current_l3a,
                NEW.voltage_l1v, NEW.voltage_l2v, NEW.voltage_l3v, NEW.instantaneous_active_power_plus_w,
                NEW.instantaneous_active_power_minus_w, NEW.total_energy_consumed_wh, NEW.total_energy_delivered_wh;
-        FOREACH t in ARRAY NEW.tags
-            LOOP
-                INSERT INTO tag (measurement_device_id, measurement_reading_time, devicecategory_category_name, name)
-                VALUES(NEW.device_id, NEW.reading_time, t.devicecategory_category_name, t.name);
-            END LOOP;
-        RETURN NULL;
+        IF NEW.tags IS NOT NULL THEN
+            FOREACH t in ARRAY NEW.tags
+                LOOP
+                    INSERT INTO tag (measurement_device_id, measurement_reading_time, devicecategory_category_name, name)
+                    VALUES(NEW.device_id, NEW.reading_time, t.devicecategory_category_name, t.name);
+                END LOOP;
+        END IF;
+        RETURN NEW;
     END;
 '
     LANGUAGE plpgsql;

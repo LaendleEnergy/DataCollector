@@ -9,6 +9,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static at.fhv.master.laendleenergy.datacollector.application.MeasurementParser.parseData;
@@ -25,7 +26,10 @@ public class MeasurementCollector {
         Optional<Measurement> measurement = parseData(message.getPayload());
 
         if(measurement.isPresent()){
-            measurementRepository.saveChanges(measurement.get());
+            CompletableFuture.runAsync(() -> {
+                System.out.println(measurement.get());
+                measurementRepository.saveMeasurement(measurement.get());
+            });
         }
         // Acknowledge the incoming message
         return message.ack();

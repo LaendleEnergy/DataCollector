@@ -63,25 +63,11 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     @Transactional
     public void saveMeasurement(Measurement measurement){
-        Query query = eM.createNativeQuery(
-                "INSERT INTO measurement_w_t (device_id, reading_time, current_l1a, current_l2a, current_l3a," +
-                        " voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w," +
-                        " total_energy_consumed_wh, total_energy_delivered_wh, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::TAG_RECORD[])"
-        );
-        query.setParameter(1, measurement.getDeviceId());
-        query.setParameter(2, measurement.getTimestamp());
-        query.setParameter(3, measurement.getCurrentL1A());
-        query.setParameter(4, measurement.getCurrentL2A());
-        query.setParameter(5, measurement.getCurrentL3A());
-        query.setParameter(6, measurement.getVoltageL1V());
-        query.setParameter(7, measurement.getVoltageL2V());
-        query.setParameter(8, measurement.getVoltageL3V());
-        query.setParameter(9, measurement.getInstantaneousActivePowerPlusW());
-        query.setParameter(10, measurement.getInstantaneousActivePowerMinusW());
-        query.setParameter(11, measurement.getTotalEnergyConsumedWh());
-        query.setParameter(12, measurement.getTotalEnergyDeliveredWh());
-        query.setParameter(13, measurement.getTags());
-        query.executeUpdate();
+        try{
+        eM.persist(measurement);}
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime) {
@@ -206,5 +192,6 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     public void saveChanges(Measurement measurement){
         eM.merge(measurement);
+        eM.flush();
     }
 }
