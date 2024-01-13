@@ -12,6 +12,7 @@ import at.fhv.master.laendleenergy.datacollector.model.exception.MeasurementNotF
 import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -29,17 +30,14 @@ public class MeasurementController {
 
 
 
-    //@Inject
-    //JsonWebToken jwt;
-
     @GetMapping("/tags/names/all")
-    //@PermitAll
+    @PermitAll
     public RestResponse<List<String>> getTagNames(){
         return RestResponse.ok(measurementService.getAllTagNames());
     }
 
     @GetMapping("/")
-    //@PermitAll
+    @PermitAll
     public RestResponse<List<MeasurementDTO>> getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate){
@@ -49,7 +47,7 @@ public class MeasurementController {
     }
 
     @GetMapping("/averaged/")
-    //@PermitAll
+    @PermitAll
     public RestResponse<List<AverageMeasurementDTO>> getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
@@ -66,6 +64,7 @@ public class MeasurementController {
 
 
     @GetMapping("/accumulated")
+    @PermitAll
     public RestResponse<List<AccumulatedMeasurementsDTO>> getAccumulatedMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
@@ -79,7 +78,7 @@ public class MeasurementController {
     }
 
     @PostMapping("/tags/")
-    //@PermitAll
+    @PermitAll
     public RestResponse<String> addTagToMeasurements(TagDTO tag){
         try {
             measurementService.addTag(tag.getStartTime(), tag.getEndTime(),

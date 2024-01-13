@@ -7,7 +7,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 
@@ -19,8 +21,9 @@ public class AccumulatedRepositoryImp implements AccumulatedMeasurementRepositor
 
     @Override
     public List<AccumulatedMeasurements> getAccumulatedMeasurementsBetweenDates(String deviceId, LocalDateTime startTime, LocalDateTime endTime, Interval interval) {
-        List<AccumulatedMeasurements> accumulatedMeasurements = eM.createNativeQuery(
-                        "WITH measurements_accumuluated AS (SELECT time_bucket(CAST(:interval AS INTERVAL), reading_time)            AS week_start, " +
+        List<Object[]> accumulatedMeasurements = eM.createNativeQuery(
+                        "WITH measurements_accumuluated AS (SELECT time_bucket(CAST(:interval AS INTERVAL), reading_time)            AS time_start, " +
+                                "                                          max(reading_time) as time_end, " +
                                 "                                          last(total_energy_consumed_wh, reading_time) - " +
                                 "                                          first(total_energy_consumed_wh, reading_time)  AS energy_consumed_wh, " +
                                 "                                          last(total_energy_delivered_wh, reading_time) - " +
@@ -29,13 +32,13 @@ public class AccumulatedRepositoryImp implements AccumulatedMeasurementRepositor
                                 "                                   WHERE device_id = :deviceId " +
                                 "                                   AND reading_time <= :endTime " +
                                 "                                   AND reading_time >= :startTime  " +
-                                "                                   GROUP BY week_start " +
-                                "                                   ORDER BY week_start) " +
-                                "SELECT *, ROUND(CAST((SELECT DISTINCT ON(device_id) \"average_price_Wh\" " +
-                                "            FROM averagepriceperkwh " +
-                                "            WHERE averagepriceperkwh.device_id = :deviceId " +
-                                "              AND  averagepriceperkwh.start_date <= week_start " +
-                                "            ORDER BY device_id, averagepriceperkwh.start_date) AS numeric) * energy_consumed_wh) / 100 AS energy_consumed_price_euro " +
+                                "                                   GROUP BY time_start " +
+                                "                                   ORDER BY time_start) " +
+                                "SELECT *, CAST(ROUND(CAST((SELECT DISTINCT ON(device_id) \"average_price_wh\" " +
+                                "            FROM averagepriceperwh " +
+                                "            WHERE averagepriceperwh.device_id = :deviceId " +
+                                "              AND  averagepriceperwh.start_date <= time_start " +
+                                "            ORDER BY device_id, averagepriceperwh.start_date) AS numeric) * energy_consumed_wh) / 100 AS float4) AS energy_consumed_price_euro " +
                                 "FROM measurements_accumuluated")
                 .setParameter("interval", "1 " + interval.toString())
                 .setParameter("endTime", endTime)
@@ -43,7 +46,16 @@ public class AccumulatedRepositoryImp implements AccumulatedMeasurementRepositor
                 .setParameter("deviceId", "1")
                 .getResultList();
 
-        return accumulatedMeasurements;
+        return accumulatedMeasurements.stream().map(
+                measurement -> {return new AccumulatedMeasurements(
+                        LocalDateTime.ofInstant(((Timestamp) measurement[0]).toInstant(), ZoneId.systemDefault()),
+                        LocalDateTime.ofInstant(((Timestamp) measurement[1]).toInstant(), ZoneId.systemDefault()),
+                        deviceId,
+                        (float) measurement[2],
+                        (float) measurement[3],
+                        (float) measurement[4]
+                );}
+        ).toList();
     }
 
 }

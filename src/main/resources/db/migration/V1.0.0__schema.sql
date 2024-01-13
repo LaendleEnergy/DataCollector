@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS public.measurement CASCADE;
 DROP TABLE IF EXISTS public.tag;
 DROP TABLE IF EXISTS public.devicecategory;
 DROP TABLE IF EXISTS public.measurement_w_t CASCADE;
+DROP TABLE IF EXISTS public.averagepriceperkwh CASCADE;
 DROP VIEW IF EXISTS public.measurement_w_t CASCADE;
 DROP TYPE IF EXISTS TAG_RECORD;
 
@@ -37,6 +38,14 @@ CREATE TABLE public.tag (
                             "name" varchar(255) NOT NULL,
                             CONSTRAINT tag_pkey PRIMARY KEY (measurement_reading_time, devicecategory_category_name, measurement_device_id, name),
                             CONSTRAINT fk_devicecategory FOREIGN KEY (devicecategory_category_name) REFERENCES public.devicecategory(category_name)
+);
+
+
+CREATE TABLE public.averagepriceperwh (
+    device_id varchar(255) NOT NULL,
+    start_date timestamp NOT NULL,
+    average_price_Wh float4 NOT NULL,
+    PRIMARY KEY (device_id, start_date)
 );
 
 CREATE TYPE TAG_RECORD as (devicecategory_category_name text, name text);
