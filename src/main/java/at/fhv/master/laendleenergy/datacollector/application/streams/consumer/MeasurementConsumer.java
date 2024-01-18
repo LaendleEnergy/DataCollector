@@ -1,4 +1,4 @@
-package at.fhv.master.laendleenergy.datacollector.application.streams;
+package at.fhv.master.laendleenergy.datacollector.application.streams.collector;
 
 
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
