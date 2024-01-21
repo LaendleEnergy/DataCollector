@@ -59,18 +59,18 @@ public class MeasurementServiceImpl implements MeasurementService {
                        String deviceName, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException, JsonProcessingException, DeviceNotFoundException {
 
 
-        String deviceId = jwt.getClaim("deviceId");
+        String meterDeviceId = jwt.getClaim("deviceId");
         String userId = jwt.getClaim("memberId");
         String householdId = jwt.getClaim("householdId");
 
-        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(deviceId, startTime, endTime);
+        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(meterDeviceId, startTime, endTime);
 
         if(measurements.isEmpty()){
             throw new MeasurementNotFoundException();
         }
 
         Optional<DeviceCategory> deviceCategoryOptional = deviceCategoryRepository.getDeviceCategoryByName(deviceCategoryName);
-        Optional<Device> deviceOptional = deviceRepository.getDeviceByMeterDeviceIdAndDeviceName(deviceId, deviceName);
+        Optional<Device> deviceOptional = deviceRepository.getDeviceByMeterDeviceIdAndDeviceName(meterDeviceId, deviceName);
 
         if(deviceCategoryOptional.isEmpty()){
             throw new DeviceCategoryNotFoundException();
@@ -80,20 +80,20 @@ public class MeasurementServiceImpl implements MeasurementService {
             throw new DeviceNotFoundException();
         }
 
-        Tag tag = new Tag(deviceName, deviceCategoryOptional.get(), startTime, endTime, deviceId, measurements);
+        Tag tag = new Tag(deviceName, deviceCategoryOptional.get(), startTime, endTime, meterDeviceId, measurements);
 
         tagRepository.saveTag(tag);
 
         taggingCreatedEventPublisher.publishMessage(new TaggingCreatedEvent(
-                userId, deviceId, householdId
+                userId, meterDeviceId, householdId
         ));
     }
 
     @Override
     public List<AverageMeasurementDTO> getAveragedMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate, int numberOfGroups) {
-        String deviceId = jwt.getClaim("deviceId");
+        String meterDeviceId = jwt.getClaim("deviceId");
         List<AveragedMeasurement> measurements = averageMeasurementRepository.getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(
-                deviceId, startDate, endDate, numberOfGroups
+                meterDeviceId, startDate, endDate, numberOfGroups
         );
         return measurements.stream().map(DTOMapper::mapAverageMeasurmentToAverageMeasurementDTO).toList();
     }
@@ -107,9 +107,9 @@ public class MeasurementServiceImpl implements MeasurementService {
             //standard value if invalid input
             intervalVal = Interval.HOUR;
         }
-        String deviceId = jwt.getClaim("deviceId");
+        String meterDeviceId = jwt.getClaim("deviceId");
         List<AveragedMeasurement> measurements = averageMeasurementRepository.getAveragedMeasurementsByDeviceIdAndStartAndEndTimeAndTimeInterval(
-                deviceId, startDate, endDate, intervalVal
+                meterDeviceId, startDate, endDate, intervalVal
         );
         return measurements.stream().map(DTOMapper::mapAverageMeasurmentToAverageMeasurementDTO).toList();
     }
@@ -123,19 +123,20 @@ public class MeasurementServiceImpl implements MeasurementService {
             //standard value if invalid input
             intervalVal = Interval.HOUR;
         }
-        String deviceId = jwt.getClaim("deviceId");
+        String meterDeviceId = jwt.getClaim("deviceId");
         List<AccumulatedMeasurements> measurements = accumulatedMeasurementRepository.getAccumulatedMeasurementsBetweenDates(
-                deviceId, startDate, endDate, intervalVal
+                meterDeviceId, startDate, endDate, intervalVal
         );
         return measurements.stream().map(DTOMapper::mapAccumulatedMeasurementToAccumulatedMeasurementDTO).toList();
-
     }
+
+
 
     @Override
     public List<MeasurementDTO> getMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
-        String deviceId = jwt.getClaim("deviceId");
+        String meterDeviceId = jwt.getClaim("deviceId");
         return  measurementRepository
-                .getMeasurementsByDeviceIdAndStartAndEndTime(deviceId, startDate, endDate)
+                .getMeasurementsByDeviceIdAndStartAndEndTime(meterDeviceId, startDate, endDate)
                 .stream()
                 .map(DTOMapper::mapMeasurementToMeasurementDTO)
                 .toList();
@@ -143,7 +144,7 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     public List<String> getAllTagNames() {
-        String deviceId = jwt.getClaim("deviceId");
-        return measurementRepository.getAllLabelNamesByDeviceId(deviceId);
+        String meterDeviceId = jwt.getClaim("deviceId");
+        return measurementRepository.getAllLabelNamesByDeviceId(meterDeviceId);
     }
 }

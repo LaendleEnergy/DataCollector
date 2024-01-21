@@ -1,6 +1,7 @@
 package at.fhv.master.laendleenergy.datacollector.application.enums;
 
 public enum Interval {
+    MONTH,
     HOUR,
     DAY,
     WEEK,
@@ -16,6 +17,9 @@ public enum Interval {
             }
             case YEAR -> {
                 return "year";
+            }
+            case MONTH -> {
+                return "month";
             }
             default -> {
                 return "hour";

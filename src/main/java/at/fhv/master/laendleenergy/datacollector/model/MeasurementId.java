@@ -23,8 +23,8 @@ public class MeasurementId implements Serializable {
     public MeasurementId() {
     }
 
-    public MeasurementId(String deviceId, LocalDateTime timestamp) {
-        this.meterDeviceId = deviceId;
+    public MeasurementId(String meterDeviceId, LocalDateTime timestamp) {
+        this.meterDeviceId = meterDeviceId;
         this.timestamp = timestamp;
     }
 
