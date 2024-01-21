@@ -25,30 +25,61 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
     public List<AveragedMeasurement> getNAveragedMeasurementsByDeviceIdAndStartAndEndTime(String deviceId,
                                                                                           LocalDateTime startTime,
                                                                                           LocalDateTime endTime, int numberOfGroups){
-        List<Object[]> measurements = eM.createNativeQuery(
-                        "SELECT " +
-                                "avg(current_l1a) as avg_current_l1a, " +
-                                "avg(current_l2a) as avg_current_l2a, " +
-                                "avg(current_l3a) as avg_current_l3a, " +
-                                "avg(voltage_l1v) as avg_voltage_l1v, " +
-                                "avg(voltage_l2v) as avg_voltage_l2v, " +
-                                "avg(voltage_l3v) as avg_voltage_l3v, " +
-                                "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
-                                "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
-                                "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
-                                "time_bucket(((SELECT MAX(reading_time) FROM measurement where reading_time <= :endTime) " +
-                                " - (SELECT MIN(reading_time) FROM measurement where reading_time >= :startTime)) / :numberOfGroups, reading_time) as timestamp_start " +
-                                "FROM measurement " +
-                                "WHERE reading_time <= :endTime " +
-                                " and reading_time >= :startTime  " +
-                                " and device_id = :deviceId " +
-                                "GROUP BY timestamp_start"
-                )
-                .setParameter("startTime", startTime)
-                .setParameter("endTime", endTime)
-                .setParameter("deviceId", deviceId)
-                .setParameter("numberOfGroups", numberOfGroups - 1)
-                .getResultList();
+
+        List<Object[]> measurements;
+        //work-around is necessary as dividing in time intervals is not accurate and n_time_buckets always = numberOfGroups + 1 sadly
+        if(numberOfGroups != 1){
+            measurements = eM.createNativeQuery(
+                            "SELECT " +
+                                    "avg(current_l1a) as avg_current_l1a, " +
+                                    "avg(current_l2a) as avg_current_l2a, " +
+                                    "avg(current_l3a) as avg_current_l3a, " +
+                                    "avg(voltage_l1v) as avg_voltage_l1v, " +
+                                    "avg(voltage_l2v) as avg_voltage_l2v, " +
+                                    "avg(voltage_l3v) as avg_voltage_l3v, " +
+                                    "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
+                                    "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
+                                    "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
+                                    "time_bucket(" +
+                                    "   (SELECT (MAX(reading_time) - MIN(reading_time)) / :numberOfGroups" +
+                                    "           FROM measurement_w_t " +
+                                    "           WHERE reading_time >= :startTime AND reading_time <= :endTime" +
+                                    "               AND device_id = :deviceId), " +
+                                    "   reading_time) as timestamp_start " +
+                                    "FROM measurement_w_t " +
+                                    "WHERE reading_time <= :endTime " +
+                                    " and reading_time >= :startTime  " +
+                                    " and device_id = :deviceId " +
+                                    "GROUP BY timestamp_start"
+                    )
+                    .setParameter("startTime", startTime)
+                    .setParameter("endTime", endTime)
+                    .setParameter("deviceId", deviceId)
+                    .setParameter("numberOfGroups", numberOfGroups - 1)
+                    .getResultList();
+        }
+        else{
+            measurements = eM.createNativeQuery(
+                            "SELECT " +
+                                    "avg(current_l1a) as avg_current_l1a, " +
+                                    "avg(current_l2a) as avg_current_l2a, " +
+                                    "avg(current_l3a) as avg_current_l3a, " +
+                                    "avg(voltage_l1v) as avg_voltage_l1v, " +
+                                    "avg(voltage_l2v) as avg_voltage_l2v, " +
+                                    "avg(voltage_l3v) as avg_voltage_l3v, " +
+                                    "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
+                                    "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
+                                    "MIN(reading_time) as t_start, MAX(reading_time) as t_end " +
+                                    "FROM measurement_w_t " +
+                                    "WHERE reading_time <= :endTime " +
+                                    " and reading_time >= :startTime  " +
+                                    " and device_id = :deviceId "
+                    )
+                    .setParameter("startTime", startTime)
+                    .setParameter("endTime", endTime)
+                    .setParameter("deviceId", deviceId)
+                    .getResultList();
+        }
 
 
 
@@ -82,7 +113,7 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                 "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
                                 "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
                                 "time_bucket(CAST(:interval AS INTERVAL), reading_time) as timestamp_start " +
-                                "FROM measurement " +
+                                "FROM measurement_w_t " +
                                 "WHERE reading_time <= :endTime " +
                                 " and reading_time >= :startTime  " +
                                 " and device_id = :deviceId " +

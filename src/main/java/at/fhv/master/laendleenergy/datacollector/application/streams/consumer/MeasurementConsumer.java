@@ -1,4 +1,4 @@
-package at.fhv.master.laendleenergy.datacollector.application.streams.collector;
+package at.fhv.master.laendleenergy.datacollector.application.streams.consumer;
 
 
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
@@ -15,7 +15,7 @@ import java.util.concurrent.CompletionStage;
 import static at.fhv.master.laendleenergy.datacollector.application.MeasurementParser.parseData;
 
 @ApplicationScoped
-public class MeasurementCollector {
+public class MeasurementConsumer {
 
 
     @Inject

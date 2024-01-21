@@ -9,12 +9,10 @@ import at.fhv.master.laendleenergy.datacollector.controller.dto.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.*;
 import at.fhv.master.laendleenergy.datacollector.model.events.TaggingCreatedEvent;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryNotFoundException;
+import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceNotFoundException;
 import at.fhv.master.laendleenergy.datacollector.model.exception.MeasurementNotFoundException;
-import at.fhv.master.laendleenergy.datacollector.model.repositories.AccumulatedMeasurementRepository;
-import at.fhv.master.laendleenergy.datacollector.model.repositories.AverageMeasurementRepository;
-import at.fhv.master.laendleenergy.datacollector.model.repositories.DeviceCategoryRepository;
-import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
-import at.fhv.master.laendleenergy.datacollector.streams.publisher.TaggingCreatedEventPublisher;
+import at.fhv.master.laendleenergy.datacollector.model.repositories.*;
+import at.fhv.master.laendleenergy.datacollector.application.streams.publisher.TaggingCreatedEventPublisher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -45,13 +43,20 @@ public class MeasurementServiceImpl implements MeasurementService {
     @Inject
     JsonWebToken jwt;
 
+
+    @Inject
+    DeviceRepository deviceRepository;
+
     @Inject
     DeviceCategoryRepository deviceCategoryRepository;
+
+    @Inject
+    private TagRepository tagRepository;
 
     @Override
     @Transactional
     public void addTag(LocalDateTime startTime, LocalDateTime endTime,
-                       String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException, JsonProcessingException {
+                       String deviceName, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException, JsonProcessingException, DeviceNotFoundException {
 
 
         String deviceId = jwt.getClaim("deviceId");
@@ -65,19 +70,23 @@ public class MeasurementServiceImpl implements MeasurementService {
         }
 
         Optional<DeviceCategory> deviceCategoryOptional = deviceCategoryRepository.getDeviceCategoryByName(deviceCategoryName);
+        Optional<Device> deviceOptional = deviceRepository.getDeviceByMeterDeviceIdAndDeviceName(deviceId, deviceName);
 
         if(deviceCategoryOptional.isEmpty()){
             throw new DeviceCategoryNotFoundException();
         }
 
-        for(Measurement measurement : measurements){
-            Tag tag = new Tag(caption, deviceCategoryOptional.get(), measurement);
-            measurement.addTag(tag);
-            measurementRepository.saveChanges(measurement);
-            taggingCreatedEventPublisher.publishMessage(new TaggingCreatedEvent(
-                    userId, deviceId, householdId
-            ));
+        if(deviceOptional.isEmpty()){
+            throw new DeviceNotFoundException();
         }
+
+        Tag tag = new Tag(deviceName, deviceCategoryOptional.get(), startTime, endTime, deviceId, measurements);
+
+        tagRepository.saveTag(tag);
+
+        taggingCreatedEventPublisher.publishMessage(new TaggingCreatedEvent(
+                userId, deviceId, householdId
+        ));
     }
 
     @Override

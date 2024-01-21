@@ -1,5 +1,6 @@
 package at.fhv.master.laendleenergy.datacollector.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Temporal;
@@ -15,27 +16,28 @@ public class MeasurementId implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
     @Column(name = "device_id")
-    private String deviceId;
+    @JsonProperty("deviceId")
+    private String meterDeviceId;
 
 
     public MeasurementId() {
     }
 
     public MeasurementId(String deviceId, LocalDateTime timestamp) {
-        this.deviceId = deviceId;
+        this.meterDeviceId = deviceId;
         this.timestamp = timestamp;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public String getMeterDeviceId() {
+        return meterDeviceId;
     }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+    public void setMeterDeviceId(String deviceId) {
+        this.meterDeviceId = deviceId;
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
@@ -47,11 +49,11 @@ public class MeasurementId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MeasurementId that = (MeasurementId) o;
-        return Objects.equals(deviceId, that.deviceId) && that.timestamp.equals(timestamp);
+        return Objects.equals(meterDeviceId, that.meterDeviceId) && that.timestamp.equals(timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deviceId, timestamp);
+        return Objects.hash(meterDeviceId, timestamp);
     }
 }

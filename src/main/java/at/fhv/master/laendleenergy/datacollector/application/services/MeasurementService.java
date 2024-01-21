@@ -4,6 +4,7 @@ import at.fhv.master.laendleenergy.datacollector.controller.dto.AccumulatedMeasu
 import at.fhv.master.laendleenergy.datacollector.controller.dto.AverageMeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.dto.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryNotFoundException;
+import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceNotFoundException;
 import at.fhv.master.laendleenergy.datacollector.model.exception.MeasurementNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MeasurementService {
-    void addTag(LocalDateTime startTime, LocalDateTime endTime, String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException, JsonProcessingException;
+    void addTag(LocalDateTime startTime, LocalDateTime endTime, String caption, String deviceCategoryName) throws MeasurementNotFoundException, DeviceCategoryNotFoundException, JsonProcessingException, DeviceNotFoundException;
     List<AverageMeasurementDTO> getAveragedMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate, int numberGroups);
 
     List<AverageMeasurementDTO> getAveragedMeasurementsBetweenDatesAndInterval(LocalDateTime startDate, LocalDateTime endDate, String interval);

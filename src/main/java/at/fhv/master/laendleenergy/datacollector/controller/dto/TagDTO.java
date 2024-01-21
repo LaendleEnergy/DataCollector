@@ -15,8 +15,8 @@ public class TagDTO {
     @JsonProperty
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime endTime;
-    @JsonProperty
-    String caption;
+    @JsonProperty(value = "caption")
+    String deviceName;
     @JsonProperty
     String deviceCategoryName;
 
@@ -28,11 +28,21 @@ public class TagDTO {
         return endTime;
     }
 
-    public String getCaption() {
-        return caption;
+    public String getDeviceName() {
+        return deviceName;
     }
 
     public String getDeviceCategoryName() {
         return deviceCategoryName;
+    }
+
+    public TagDTO() {
+    }
+
+    public TagDTO(LocalDateTime startTime, LocalDateTime endTime, String deviceName, String deviceCategoryName) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.deviceName = deviceName;
+        this.deviceCategoryName = deviceCategoryName;
     }
 }

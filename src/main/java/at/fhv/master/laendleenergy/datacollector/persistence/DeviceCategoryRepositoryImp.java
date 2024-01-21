@@ -26,4 +26,9 @@ public class DeviceCategoryRepositoryImp implements DeviceCategoryRepository {
         return eM.createQuery("FROM DeviceCategory ", DeviceCategory.class)
                 .getResultList();
     }
+
+    @Override
+    public void saveDeviceCategory(DeviceCategory deviceCategory) {
+        eM.persist(deviceCategory);
+    }
 }

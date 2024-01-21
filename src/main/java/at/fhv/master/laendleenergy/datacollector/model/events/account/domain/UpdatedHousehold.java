@@ -1,11 +1,12 @@
-package at.fhv.master.laendleenergy.datacollector.model.events.account;
+package at.fhv.master.laendleenergy.datacollector.model.events.account.domain;
 
 
+import at.fhv.master.laendleenergy.datacollector.model.events.account.domain.ElectricityPricingPlan;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdatedHouseholdEvent {
+public class UpdatedHousehold {
 
     @JsonProperty
     private String id;
@@ -13,4 +14,16 @@ public class UpdatedHouseholdEvent {
     private ElectricityPricingPlan pricingPlan;
     @JsonProperty
     private String deviceId;
+
+    public String getId() {
+        return id;
+    }
+
+    public ElectricityPricingPlan getPricingPlan() {
+        return pricingPlan;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
 }

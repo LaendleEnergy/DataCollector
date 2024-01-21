@@ -10,12 +10,10 @@ public class DeviceCategory {
     @Id
     @Column(name = "category_name")
     String categoryName;
-    @Column
-    String description;
 
-    public DeviceCategory(String categoryName, String description) {
+
+    public DeviceCategory(String categoryName) {
         this.categoryName = categoryName;
-        this.description = description;
     }
 
     public DeviceCategory() {
@@ -24,10 +22,5 @@ public class DeviceCategory {
     public String getCategoryName() {
         return categoryName;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
 
 }

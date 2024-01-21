@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 @ApplicationScoped
 @Startup
-public class DeviceCategoryAddedConsumer implements Consumer<DeviceCategoryAddedEvent> {
+public class DeviceCategoryAddedEventConsumer implements Consumer<DeviceCategoryAddedEvent> {
     @Inject
     EventHandler eventHandler;
 
@@ -22,7 +22,7 @@ public class DeviceCategoryAddedConsumer implements Consumer<DeviceCategoryAdded
     private final PubSubCommands.RedisSubscriber subscriber;
 
 
-    public DeviceCategoryAddedConsumer(RedisDataSource ds) {
+    public DeviceCategoryAddedEventConsumer(RedisDataSource ds) {
         pub = ds.pubsub(DeviceCategoryAddedEvent.class);
         subscriber = pub.subscribe("DeviceCategoryAddedEvent", this);
     }

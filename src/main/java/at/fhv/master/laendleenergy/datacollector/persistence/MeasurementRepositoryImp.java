@@ -73,7 +73,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     public List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime) {
         List<Measurement> measurements = eM.createQuery("FROM Measurement " +
                         " WHERE measurementId.timestamp >= :startTime AND measurementId.timestamp <= :endTime" +
-                        " AND measurementId.deviceId = :deviceId", Measurement.class)
+                        " AND measurementId.meterDeviceId = :deviceId", Measurement.class)
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
                 .setParameter("deviceId", deviceId)
@@ -84,7 +84,7 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
 
     @Override
     public List<String> getAllLabelNamesByDeviceId(String deviceId) {
-        return eM.createNativeQuery(" SELECT DISTINCT name" +
+        return eM.createNativeQuery(" SELECT DISTINCT device_name" +
                 " FROM tag " +
                         "WHERE measurement_device_id = :deviceId"
         )

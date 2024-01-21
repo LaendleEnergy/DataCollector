@@ -9,4 +9,6 @@ public interface DeviceCategoryRepository {
     Optional<DeviceCategory> getDeviceCategoryByName(String name);
 
     List<DeviceCategory> getAllDeviceCategories();
+
+    void saveDeviceCategory(DeviceCategory deviceCategory);
 }

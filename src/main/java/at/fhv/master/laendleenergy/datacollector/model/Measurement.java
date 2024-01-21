@@ -3,7 +3,6 @@ package at.fhv.master.laendleenergy.datacollector.model;
 import at.fhv.master.laendleenergy.datacollector.model.usertypes.TagUserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.*;
@@ -59,12 +58,11 @@ public class Measurement {
 
     }
 
-    public Measurement(LocalDateTime timestamp, float currentL1A, float currentL2A, float currentL3A,
+    public Measurement(String meterDeviceId, LocalDateTime timestamp, float currentL1A, float currentL2A, float currentL3A,
                        float voltageL1V, float voltageL2V, float voltageL3V,
                        float instantaneousActivePowerPlusW, float instantaneousActivePowerMinusW,
                        float totalEnergyConsumedWh, float totalEnergyDeliveredWh) {
-        //todo: deviceId logic
-        this.measurementId = new MeasurementId("1", timestamp);
+        this.measurementId = new MeasurementId(meterDeviceId, timestamp);
         this.currentL1A = currentL1A;
         this.currentL2A = currentL2A;
         this.currentL3A = currentL3A;
@@ -128,7 +126,7 @@ public class Measurement {
     }
 
     public String getDeviceId() {
-        return measurementId.getDeviceId();
+        return measurementId.getMeterDeviceId();
     }
 
     public void setCurrentL1A(float currentL1A) {

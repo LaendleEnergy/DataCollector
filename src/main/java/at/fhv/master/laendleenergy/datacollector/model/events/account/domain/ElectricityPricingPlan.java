@@ -1,4 +1,4 @@
-package at.fhv.master.laendleenergy.datacollector.model.events.account;
+package at.fhv.master.laendleenergy.datacollector.model.events.account.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,5 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ElectricityPricingPlan {
     @JsonProperty
-    private double averagePricePerKwh;
+    private float averagePricePerKwh;
+
+    public float getAveragePricePerKwh() {
+        return averagePricePerKwh;
+    }
 }
