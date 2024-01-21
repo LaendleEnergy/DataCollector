@@ -5,9 +5,6 @@ import at.fhv.master.laendleenergy.datacollector.model.repositories.TagRepositor
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import org.hibernate.HibernateError;
-import org.hibernate.HibernateException;
-import org.hibernate.exception.ConstraintViolationException;
 
 @ApplicationScoped
 public class TagRepositoryImp implements TagRepository {

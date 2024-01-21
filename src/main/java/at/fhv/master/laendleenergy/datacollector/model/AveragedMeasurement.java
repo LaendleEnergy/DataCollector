@@ -1,7 +1,5 @@
 package at.fhv.master.laendleenergy.datacollector.model;
 
-import jakarta.persistence.Column;
-
 import java.time.LocalDateTime;
 
 public class AveragedMeasurement {

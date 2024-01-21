@@ -1,14 +1,12 @@
 package at.fhv.master.laendleenergy.datacollector.persistence;
 
 import at.fhv.master.laendleenergy.datacollector.application.enums.Interval;
-import at.fhv.master.laendleenergy.datacollector.model.AccumulatedMeasurements;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import at.fhv.master.laendleenergy.datacollector.model.repositories.MeasurementRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
 import java.time.Instant;

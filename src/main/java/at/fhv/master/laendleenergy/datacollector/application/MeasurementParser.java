@@ -1,17 +1,12 @@
 package at.fhv.master.laendleenergy.datacollector.application;
 
+import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.enterprise.context.ApplicationScoped;
-import at.fhv.master.laendleenergy.datacollector.model.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Arrays;
+
 import java.util.Optional;
-import java.util.TimeZone;
 
 @ApplicationScoped
 public class MeasurementParser {

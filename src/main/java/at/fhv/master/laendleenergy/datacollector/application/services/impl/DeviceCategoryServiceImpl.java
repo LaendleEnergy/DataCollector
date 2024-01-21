@@ -6,9 +6,9 @@ import at.fhv.master.laendleenergy.datacollector.application.streams.publisher.D
 import at.fhv.master.laendleenergy.datacollector.controller.dto.DeviceCategoryDTO;
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.events.household.DeviceCategoryAddedEvent;
+import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryAlreadyExistsException;
 import at.fhv.master.laendleenergy.datacollector.model.repositories.DeviceCategoryRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.stream.JsonToken;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -37,15 +37,17 @@ public class DeviceCategoryServiceImpl implements DeviceCategoryService {
 
     @Override
     @Transactional
-    public void addDeviceCategory(DeviceCategoryDTO category) throws JsonProcessingException {
+    public void addDeviceCategory(DeviceCategoryDTO category) throws JsonProcessingException, DeviceCategoryAlreadyExistsException {
         String householdId = jwt.getClaim("householdId");
         String meterDeviceId = jwt.getClaim("deviceId");
         String memberId = jwt.getClaim("memberId");
-        DeviceCategory deviceCategory = new DeviceCategory(category.getName());
-        deviceCategoryRepository.saveDeviceCategory(deviceCategory);
-        deviceCategoryAddedEventPublisher.publishMessage(new DeviceCategoryAddedEvent(
-                category.getName(), meterDeviceId, householdId, memberId
-        ));
-
+        if(deviceCategoryRepository.getDeviceCategoryByName(category.getName()).isEmpty()) {
+            DeviceCategory deviceCategory = new DeviceCategory(category.getName());
+            deviceCategoryRepository.saveDeviceCategory(deviceCategory);
+            deviceCategoryAddedEventPublisher.publishMessage(new DeviceCategoryAddedEvent(
+                    category.getName(), meterDeviceId, householdId, memberId
+            ));
+        }
+        else throw new DeviceCategoryAlreadyExistsException();
     }
 }

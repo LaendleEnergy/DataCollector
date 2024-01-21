@@ -1,7 +1,5 @@
 package at.fhv.master.laendleenergy.datacollector.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDateTime;
 
 public class AccumulatedMeasurements {

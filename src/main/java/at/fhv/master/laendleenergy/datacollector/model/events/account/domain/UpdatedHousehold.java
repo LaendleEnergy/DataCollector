@@ -1,7 +1,6 @@
 package at.fhv.master.laendleenergy.datacollector.model.events.account.domain;
 
 
-import at.fhv.master.laendleenergy.datacollector.model.events.account.domain.ElectricityPricingPlan;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

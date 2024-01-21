@@ -2,9 +2,6 @@ package at.fhv.master.laendleenergy.datacollector.controller;
 
 
 import at.fhv.master.laendleenergy.datacollector.application.services.MeasurementService;
-import at.fhv.master.laendleenergy.datacollector.controller.dto.AccumulatedMeasurementsDTO;
-import at.fhv.master.laendleenergy.datacollector.controller.dto.AverageMeasurementDTO;
-import at.fhv.master.laendleenergy.datacollector.controller.dto.MeasurementDTO;
 import at.fhv.master.laendleenergy.datacollector.controller.dto.TagDTO;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryNotFoundException;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceNotFoundException;
@@ -13,11 +10,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/measurements")
@@ -28,14 +27,34 @@ public class MeasurementController {
 
     
     @GetMapping("/tags/names/all")
+    @Operation(summary = "Get tag names / device names for measurements associated with own account (via jwt token) ",
+            description = "Returns tag names / device names")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200", description = "Extracted tag / device names"),
+            @APIResponse(
+                    responseCode = "401", description = "Unauthorized"),
+            @APIResponse(
+                    responseCode = "500", description = "Server Error")}
+    )
     @PermitAll
-    public RestResponse<List<String>> getTagNames(){
+    public RestResponse getTagNames(){
         return RestResponse.ok(measurementService.getAllTagNames());
     }
 
     @GetMapping("/")
+    @Operation(summary = "Get measurements associated with own account (via jwt token) between given dates",
+            description = "Returns measurements associated with own account (via jwt token) between given dates.")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200", description = "Extracted measurements"),
+            @APIResponse(
+                    responseCode = "401", description = "Unauthorized"),
+            @APIResponse(
+                    responseCode = "500", description = "Server Error")}
+    )
     @PermitAll
-    public RestResponse<List<MeasurementDTO>> getMeasurementsBetweenDates(
+    public RestResponse getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate){
         return RestResponse.ok(
@@ -44,6 +63,17 @@ public class MeasurementController {
     }
 
     @GetMapping("/averaged/")
+    @Operation(summary = "Get averaged measurements associated with own account (via jwt token) for a given timespan.",
+            description = "Returns averaged measurements associated with own account (via jwt token) fora  given timespan.\n" +
+                    "Measurements can be averaged within a given number of groups XOR within a given interval (day, week, month, year).")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200", description = "Extracted measurements"),
+            @APIResponse(
+                responseCode = "401", description = "Unauthorized"),
+            @APIResponse(
+                responseCode = "500", description = "Server Error")}
+    )
     @PermitAll
     public RestResponse getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
@@ -65,8 +95,19 @@ public class MeasurementController {
 
 
     @GetMapping("/accumulated")
+    @Operation(summary = "Get accumulated measurements associated with own account (via jwt token) for given timespan.",
+            description = "Returns accumulated measurements associated with own account (via jwt token) for given timespan. \n" +
+                    "Measurements can be accumulated within a given interval (day, week, month, year).")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200", description = "Extracted measurements"),
+            @APIResponse(
+                    responseCode = "401", description = "Unauthorized"),
+            @APIResponse(
+                    responseCode = "500", description = "Server Error")}
+    )
     @PermitAll
-    public RestResponse<List<AccumulatedMeasurementsDTO>> getAccumulatedMeasurementsBetweenDates(
+    public RestResponse getAccumulatedMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
             @RequestParam("interval") String interval
@@ -79,8 +120,18 @@ public class MeasurementController {
     }
 
     @PostMapping("/tags/")
+    @Operation(summary = "Add tag to measurements associated with own account (via jwt token) for given timespan",
+            description = "Returns if adding tag to measurements associated with own account (via jwt token) was successful.")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200", description = "Success message"),
+            @APIResponse(
+                    responseCode = "401", description = "Unauthorized"),
+            @APIResponse(
+                    responseCode = "500", description = "Server Error")}
+    )
     @PermitAll
-    public RestResponse<String> addTagToMeasurements(TagDTO tag){
+    public RestResponse addTagToMeasurements(TagDTO tag){
         try {
             measurementService.addTag(tag.getStartTime(), tag.getEndTime(),
                     tag.getDeviceName(), tag.getDeviceCategoryName());
