@@ -8,6 +8,7 @@ import io.quarkus.runtime.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
@@ -28,7 +29,9 @@ public class DeviceAddedEventConsumer implements Consumer<DeviceAddedEvent> {
 
     @Override
     public void accept(DeviceAddedEvent deviceAddedEvent) {
-        eventHandler.handleDeviceAddedEvent(deviceAddedEvent);
+        CompletableFuture.runAsync(() -> {
+            eventHandler.handleDeviceAddedEvent(deviceAddedEvent);
+        });
     }
 
 }

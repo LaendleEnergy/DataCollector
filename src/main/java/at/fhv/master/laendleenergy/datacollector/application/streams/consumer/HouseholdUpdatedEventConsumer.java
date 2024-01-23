@@ -6,6 +6,7 @@ import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.pubsub.PubSubCommands;
 import jakarta.inject.Inject;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class HouseholdUpdatedEventConsumer implements Consumer<HouseholdUpdatedEvent> {
@@ -23,6 +24,8 @@ public class HouseholdUpdatedEventConsumer implements Consumer<HouseholdUpdatedE
 
     @Override
     public void accept(HouseholdUpdatedEvent householdUpdatedEvent) {
-        eventHandler.handleHouseholdUpdatedEvent(householdUpdatedEvent);
+        CompletableFuture.runAsync(() -> {
+            eventHandler.handleHouseholdUpdatedEvent(householdUpdatedEvent);
+        });
     }
 }
