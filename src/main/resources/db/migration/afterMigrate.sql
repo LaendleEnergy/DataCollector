@@ -1,6 +1,7 @@
-INSERT INTO public.devicecategory (category_name) VALUES ('washing_machine');
-INSERT INTO public.device (device_name, category_name, device_id) VALUES('Waschmaschine 1', 'washing_machine', 'D1');
-INSERT INTO public.device (device_name, category_name, device_id) VALUES('Waschmaschine 2', 'washing_machine', 'D1');
+INSERT INTO public.devicecategory (category_name) VALUES ('Mikrowelle');
+INSERT INTO public.devicecategory (category_name) VALUES ('Kuehlschrank');
+INSERT INTO public.device (device_name, category_name, device_id) VALUES('Mikrowelle 1', 'Mikrowelle', 'D1');
+INSERT INTO public.device (device_name, category_name, device_id) VALUES('Mikrowelle 2', 'Mikrowelle', 'D1');
 INSERT INTO public.averagepriceperwh (device_id, start_date, average_price_Wh) VALUES ('D1', '2023-01-01 00:00:00', 0.03);
 INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2a, current_l3a, voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w, total_energy_consumed_wh, total_energy_delivered_wh) VALUES ('2023-05-08 06:26:35.000000 +00:00', 'D1', 0.6800000071525574, 0.4099999964237213, 0.36000001430511475, 230.6999969482422, 231.8000030517578, 232.1999969482422, 113, 0, 1160086, 0);
 INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2a, current_l3a, voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w, total_energy_consumed_wh, total_energy_delivered_wh) VALUES ('2023-05-10 06:37:25.000000 +00:00', 'D1', 0.7099999785423279, 0.4300000071525574, 0.3100000023841858, 230.8000030517578, 232.1999969482422, 233, 177, 0, 1174494, 0);
@@ -10,9 +11,9 @@ INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2
 INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2a, current_l3a, voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w, total_energy_consumed_wh, total_energy_delivered_wh) VALUES ('2023-05-10 09:04:15.000000 +00:00', 'D1', 0.699999988079071, 0.4099999964237213, 0.25999999046325684, 230.60000610351562, 232.39999389648438, 232.39999389648438, 104, 0, 1174824, 0);
 INSERT INTO tag (measurement_device_id, measurement_reading_timerange, devicecategory_category_name, device_name)
 VALUES
-    ('D1', '[2023-05-08 06:26:35.000000 +00:00, 2023-05-10 06:26:35.000000 +00:00]', 'washing_machine', 'Waschmaschine 1'),
-    ('D1', '[2023-05-08 06:26:35.000000 +00:00, 2023-05-10 06:26:35.000000 +00:00]', 'washing_machine', 'Waschmaschine 2'),
-    ('D1', '[2023-05-11 06:26:35.000000 +00:00, 2023-05-12 06:26:35.000000 +00:00]', 'washing_machine', 'Waschmaschine 2');
+    ('D1', '[2023-05-08 06:26:35.000000 +00:00, 2023-05-10 06:26:35.000000 +00:00]', 'Mikrowelle', 'Mikrowelle 1'),
+    ('D1', '[2023-05-08 06:26:35.000000 +00:00, 2023-05-10 06:26:35.000000 +00:00]', 'Mikrowelle', 'Mikrowelle 2'),
+    ('D1', '[2023-05-11 06:26:35.000000 +00:00, 2023-05-12 06:26:35.000000 +00:00]', 'Mikrowelle', 'Mikrowelle 2');
 INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2a, current_l3a, voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w, total_energy_consumed_wh, total_energy_delivered_wh) VALUES ('2023-05-06 11:53:20.000000 +00:00', 'D1', 0.7400000095367432, 0.38999998569488525, 0.17000000178813934, 227.60000610351562, 230.5, 229.3000030517578, 144, 0, 1139492, 0);
 INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2a, current_l3a, voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w, total_energy_consumed_wh, total_energy_delivered_wh) VALUES ('2023-05-09 06:21:10.000000 +00:00', 'D1', 0.7099999785423279, 0.4099999964237213, 0.30000001192092896, 230.5, 232.1999969482422, 232.89999389648438, 111, 0, 1166765, 0);
 INSERT INTO public.measurement (reading_time, device_id, current_l1a, current_l2a, current_l3a, voltage_l1v, voltage_l2v, voltage_l3v, instantaneous_active_power_plus_w, instantaneous_active_power_minus_w, total_energy_consumed_wh, total_energy_delivered_wh) VALUES ('2023-05-09 04:16:00.000000 +00:00', 'D1', 0.6700000166893005, 0.4099999964237213, 0.3499999940395355, 231.8000030517578, 231.8000030517578, 231.10000610351562, 97, 0, 1166395, 0);

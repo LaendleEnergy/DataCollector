@@ -32,6 +32,7 @@ public class EventHandler {
     }
 
 
+    @Transactional
     public void handleDeviceAddedEvent(DeviceAddedEvent deviceAddedEvent) {
         Optional<DeviceCategory> deviceCategoryOpt = deviceCategoryRepository.getDeviceCategoryByName(deviceAddedEvent.getDeviceCategoryName());
         Device device;
@@ -46,6 +47,7 @@ public class EventHandler {
         deviceRepository.saveDevice(device);
     }
 
+    @Transactional
     public void handleHouseholdUpdatedEvent(HouseholdUpdatedEvent householdUpdatedEvent) {
         String meterDeviceId = householdUpdatedEvent.getUpdatedHousehold().getDeviceId();
         LocalDateTime updateTime = householdUpdatedEvent.getUpdateTime();
