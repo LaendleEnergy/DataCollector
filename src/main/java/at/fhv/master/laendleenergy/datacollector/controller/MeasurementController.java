@@ -57,6 +57,9 @@ public class MeasurementController {
     public RestResponse getMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate){
+        if(startDate.isAfter(endDate)){
+            return RestResponse.status(RestResponse.Status.BAD_REQUEST, "ERROR: The startDate cannot be before the endDate.");
+        }
         return RestResponse.ok(
                 measurementService.getMeasurementsBetweenDates(startDate, endDate)
         );
@@ -79,6 +82,9 @@ public class MeasurementController {
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
             @RequestParam("numberOfGroups") Integer numberOfGroups, @RequestParam("interval") String interval){
+        if(startDate.isAfter(endDate)){
+            return RestResponse.status(RestResponse.Status.BAD_REQUEST, "ERROR: The startDate cannot be before the endDate.");
+        }
         if(interval != null && numberOfGroups != null){
             return RestResponse.status(RestResponse.Status.INTERNAL_SERVER_ERROR,
                     "ERROR: You cannot have set numberOfGroups and interval at the same time!");
@@ -112,6 +118,9 @@ public class MeasurementController {
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
             @RequestParam("interval") String interval
     ){
+        if(startDate.isAfter(endDate)){
+            return RestResponse.status(RestResponse.Status.BAD_REQUEST, "ERROR: The startDate cannot be before the endDate.");
+        }
         return RestResponse.ok(
             measurementService.getAccumulatedMeasurementsBetweenDatesAndInterval(
                     startDate, endDate, interval

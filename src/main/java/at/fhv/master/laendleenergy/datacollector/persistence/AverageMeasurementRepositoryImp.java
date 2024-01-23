@@ -38,17 +38,14 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                     "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
                                     "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
                                     "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
-                                    "time_bucket(" +
-                                    "   (SELECT (MAX(reading_time) - MIN(reading_time)) / :numberOfGroups" +
-                                    "           FROM measurement_w_t " +
-                                    "           WHERE reading_time >= :startTime AND reading_time <= :endTime" +
-                                    "               AND device_id = :deviceId), " +
-                                    "   reading_time) as timestamp_start " +
+                                    "time_bucket(((SELECT MAX(reading_time) FROM measurement_w_t where reading_time <= :endTime and device_id = :deviceId)" +
+                                    "         - (SELECT MIN(reading_time) FROM measurement_w_t where reading_time >= :startTime and device_id = :deviceId)) / :numberOfGroups, reading_time) as timestamp_start " +
                                     "FROM measurement_w_t " +
                                     "WHERE reading_time <= :endTime " +
                                     " and reading_time >= :startTime  " +
                                     " and device_id = :deviceId " +
-                                    "GROUP BY timestamp_start"
+                                    "GROUP BY timestamp_start " +
+                                    "ORDER BY timestamp_start ASC"
                     )
                     .setParameter("startTime", startTime)
                     .setParameter("endTime", endTime)
@@ -71,7 +68,8 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                     "FROM measurement_w_t " +
                                     "WHERE reading_time <= :endTime " +
                                     " and reading_time >= :startTime  " +
-                                    " and device_id = :deviceId "
+                                    " and device_id = :deviceId " +
+                                    "ORDER BY t_start ASC"
                     )
                     .setParameter("startTime", startTime)
                     .setParameter("endTime", endTime)
@@ -115,7 +113,8 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                 "WHERE reading_time <= :endTime " +
                                 " and reading_time >= :startTime  " +
                                 " and device_id = :deviceId " +
-                                "GROUP BY timestamp_start"
+                                "GROUP BY timestamp_start " +
+                                "ORDER BY timestamp_start"
                 )
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
