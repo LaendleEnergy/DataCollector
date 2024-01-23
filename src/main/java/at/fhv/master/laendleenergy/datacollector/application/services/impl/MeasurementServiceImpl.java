@@ -98,6 +98,8 @@ public class MeasurementServiceImpl implements MeasurementService {
         return measurements.stream().map(DTOMapper::mapAverageMeasurmentToAverageMeasurementDTO).toList();
     }
 
+
+
     @Override
     public List<AverageMeasurementDTO> getAveragedMeasurementsBetweenDatesAndInterval(LocalDateTime startDate, LocalDateTime endDate, String interval) {
         Interval intervalVal;
@@ -113,6 +115,8 @@ public class MeasurementServiceImpl implements MeasurementService {
         );
         return measurements.stream().map(DTOMapper::mapAverageMeasurmentToAverageMeasurementDTO).toList();
     }
+
+
 
     @Override
     public List<AccumulatedMeasurementsDTO> getAccumulatedMeasurementsBetweenDatesAndInterval(LocalDateTime startDate, LocalDateTime endDate, String interval) {
