@@ -1,4 +1,4 @@
-package at.fhv.master.laendleenergy.datacollector.application;
+package at.fhv.master.laendleenergy.datacollector.unit.application;
 
 
 import at.fhv.master.laendleenergy.datacollector.application.enums.Interval;
@@ -93,7 +93,7 @@ public class MeasurementServiceTests {
         String deviceName = "Waschmaschine 1";
         String deviceCategoryName = "Waschmaschine";
 
-        Mockito.when(measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(any(), any(), any()))
+        Mockito.when(measurementRepository.getMeasurementsByMeterDeviceIdAndStartAndEndTime(any(), any(), any()))
                 .thenReturn(List.of(measurement));
 
 
@@ -163,14 +163,14 @@ public class MeasurementServiceTests {
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = startTime.plusDays(1);
 
-        Mockito.when(measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime("D1", startTime, endTime)).thenReturn(
+        Mockito.when(measurementRepository.getMeasurementsByMeterDeviceIdAndStartAndEndTime("D1", startTime, endTime)).thenReturn(
                 List.of(measurement)
         );
 
         measurementService.getMeasurementsBetweenDates(startTime, endTime);
 
         Mockito.verify(measurementRepository, times(1))
-                .getMeasurementsByDeviceIdAndStartAndEndTime("D1", startTime, endTime);
+                .getMeasurementsByMeterDeviceIdAndStartAndEndTime("D1", startTime, endTime);
 
     }
 

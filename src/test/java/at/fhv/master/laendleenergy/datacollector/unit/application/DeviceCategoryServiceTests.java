@@ -1,4 +1,4 @@
-package at.fhv.master.laendleenergy.datacollector.application;
+package at.fhv.master.laendleenergy.datacollector.unit.application;
 import at.fhv.master.laendleenergy.datacollector.application.services.DeviceCategoryService;
 import at.fhv.master.laendleenergy.datacollector.controller.dto.DeviceCategoryDTO;
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;

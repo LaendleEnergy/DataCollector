@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +44,7 @@ public class DeviceCategoryController {
 
 
     //in a later version addDeviceCategory should only be accessed by a system administrator
-    @POST
+    @PostMapping("/add")
     @Operation(summary = "Adds device category",
             description = "Returns success of added device category.\n" +
                     "Method can only be accessed by sys-admin (not implemented).")
@@ -53,7 +54,7 @@ public class DeviceCategoryController {
             @APIResponse(
                     responseCode = "401", description = "Unauthorized"),
             @APIResponse(
-                    responseCode = "403", description = "Device Category already exists"),
+                    responseCode = "409", description = "Device Category already exists"),
             @APIResponse(
                     responseCode = "500", description = "Server Error")}
     )
@@ -65,7 +66,7 @@ public class DeviceCategoryController {
         } catch (JsonProcessingException e) {
             return RestResponse.status(RestResponse.Status.INTERNAL_SERVER_ERROR);
         } catch (DeviceCategoryAlreadyExistsException e) {
-            return RestResponse.status(403, e.toString());
+            return RestResponse.status(409, e.toString());
         }
 
     }

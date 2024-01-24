@@ -49,12 +49,12 @@ public class EventHandler {
 
     @Transactional
     public void handleHouseholdUpdatedEvent(HouseholdUpdatedEvent householdUpdatedEvent) {
-        String meterDeviceId = householdUpdatedEvent.getUpdatedHousehold().getDeviceId();
+        String meterDeviceId = householdUpdatedEvent.getUpdatedHousehold().getMeterDeviceId();
         LocalDateTime updateTime = householdUpdatedEvent.getUpdateTime();
         float newAveragePricePerWh = householdUpdatedEvent.getUpdatedHousehold().getPricingPlan().getAveragePricePerKwh() / 1000;
         Optional<AveragePricePerWh> averagePricePerWhOpt =
                 averagePricePerWhRepository.findMostRecentAveragePricePerWhForGivenMeterDeviceId(
-                        householdUpdatedEvent.getUpdatedHousehold().getDeviceId()
+                        householdUpdatedEvent.getUpdatedHousehold().getMeterDeviceId()
                 );
         if(averagePricePerWhOpt.isPresent())
         {

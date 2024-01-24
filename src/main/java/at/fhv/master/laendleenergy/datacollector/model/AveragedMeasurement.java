@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class AveragedMeasurement {
     private LocalDateTime timeStart;
     private LocalDateTime timeEnd;
-    private String deviceId;
+    private String meterDeviceId;
     private float currentL1AAvg;
     private float currentL2AAvg;
     private float currentL3AAvg;
@@ -15,13 +15,13 @@ public class AveragedMeasurement {
     private float instantaneousActivePowerPlusWAvg;
     private float instantaneousActivePowerMinusWAvg;
 
-    public AveragedMeasurement(LocalDateTime timeStart, LocalDateTime timeEnd, String deviceId, float currentL1AAvg,
+    public AveragedMeasurement(LocalDateTime timeStart, LocalDateTime timeEnd, String meterDeviceId, float currentL1AAvg,
                                float currentL2AAvg, float currentL3AAvg, float voltageL1VAvg,
                                float voltageL2VAvg, float voltageL3VAvg, float instantaneousActivePowerPlusWAvg,
                                float instantaneousActivePowerMinusWAvg) {
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
-        this.deviceId = deviceId;
+        this.meterDeviceId = meterDeviceId;
         this.currentL1AAvg = currentL1AAvg;
         this.currentL2AAvg = currentL2AAvg;
         this.currentL3AAvg = currentL3AAvg;
@@ -40,8 +40,8 @@ public class AveragedMeasurement {
         return timeEnd;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public String getMeterDeviceId() {
+        return meterDeviceId;
     }
 
     public float getCurrentL1AAvg() {

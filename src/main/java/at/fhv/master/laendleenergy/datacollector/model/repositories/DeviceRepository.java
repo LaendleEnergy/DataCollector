@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface DeviceRepository {
     void saveDevice(Device device);
 
-    Optional<Device> getDeviceByMeterDeviceIdAndDeviceName(String deviceId, String caption);
+    Optional<Device> getDeviceByMeterDeviceIdAndDeviceName(String meterDeviceId, String deviceName);
 }

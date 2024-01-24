@@ -22,7 +22,7 @@ public class UpdatedHousehold {
         return pricingPlan;
     }
 
-    public String getDeviceId() {
+    public String getMeterDeviceId() {
         return deviceId;
     }
 }

@@ -117,7 +117,7 @@ CREATE OR REPLACE FUNCTION insert_measurement_trigger_fkt()
                 LOOP
                     INSERT INTO tag (meter_device_id,  devicecategory_category_name, device_name, reading_timerange)
                     VALUES (NEW.meter_device_id,  t.devicecategory_category_name, t.device_name, t.reading_timerange)
-                    ON CONFLICT (measurement_device_id, measurement_reading_timerange, devicecategory_category_name, device_name, reading_timerange)
+                    ON CONFLICT (meter_device_id, reading_timerange, devicecategory_category_name, device_name, reading_timerange)
                         DO NOTHING;
                 END LOOP;
         END IF;

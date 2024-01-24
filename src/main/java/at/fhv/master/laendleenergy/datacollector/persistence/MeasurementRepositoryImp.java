@@ -22,42 +22,6 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
     private EntityManager eM;
 
 
-    public Optional<Measurement> getMeasurementByDeviceIdAndTimeStamp(){
-        return Optional.empty();
-    }
-
-    @Transactional
-    public void createMeasurementTable(){
-        eM.createNativeQuery("CREATE TABLE measurement(" +
-                "time TIMESTAMPTZ NOT NULL," +
-                "meter_device_id varchar(255), " +
-                "current_l1a float, " +
-                "current_l2a float, " +
-                "current_l3a float, " +
-                "voltage_l1v float, " +
-                "voltage_l2v float, " +
-                "voltage_l3v float, " +
-                "instantaneous_active_power_plus_w float, " +
-                "instantaneous_active_power_minus_w float, " +
-                "total_energy_consumed_wh float, " +
-                "total_energy_delivered_wh float, " +
-                "PRIMARY KEY (time, meter_device_id)" +
-                ");").executeUpdate();
-
-    }
-
-    @Transactional
-    public void createUniqueIndexOnMeasurementTable(){
-        eM.createNativeQuery("CREATE UNIQUE INDEX idx_timestamp_device_id " +
-                "  ON measurement(meter_device_id, reading_time);").executeUpdate();
-    }
-
-
-    @Transactional
-    public void convertMeasurementTableToHyperTable(){
-        List<Object> result = eM.createNativeQuery("SELECT create_hypertable('measurement', 'time',  partitioning_column => 'meter_device_id', " +
-                "  number_partitions => 10);").getResultList();
-    }
 
     @Transactional
     public void saveMeasurement(Measurement measurement){
@@ -68,13 +32,13 @@ public class MeasurementRepositoryImp implements MeasurementRepository {
         }
     }
 
-    public List<Measurement> getMeasurementsByDeviceIdAndStartAndEndTime(String deviceId, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<Measurement> getMeasurementsByMeterDeviceIdAndStartAndEndTime(String meterDeviceId, LocalDateTime startTime, LocalDateTime endTime) {
         List<Measurement> measurements = eM.createQuery("FROM Measurement " +
                         " WHERE measurementId.timestamp >= :startTime AND measurementId.timestamp <= :endTime" +
-                        " AND measurementId.meterDeviceId = :deviceId", Measurement.class)
+                        " AND measurementId.meterDeviceId = :meterDeviceId", Measurement.class)
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
-                .setParameter("deviceId", deviceId)
+                .setParameter("meterDeviceId", meterDeviceId)
                 .getResultList();
         return measurements;
     }

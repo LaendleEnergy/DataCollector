@@ -36,11 +36,11 @@ public class AccumulatedRepositoryImp implements AccumulatedMeasurementRepositor
                                 "                                   ORDER BY time_start) " +
                                 "SELECT *, CAST(ROUND(CAST((SELECT DISTINCT ON(meter_device_id) \"average_price_wh\" " +
                                 "            FROM averagepriceperwh " +
-                                "            WHERE averagepriceperwh.device_id = :meterDeviceId " +
+                                "            WHERE averagepriceperwh.meter_device_id = :meterDeviceId " +
                                 "              AND  averagepriceperwh.start_date <= time_start " +
                                 "            ORDER BY meter_device_id, averagepriceperwh.start_date) AS numeric) * energy_consumed_wh) / 100 AS float4) AS energy_consumed_price_euro " +
                                 "FROM measurements_accumuluated")
-                .setParameter("interval", "1 " + interval.toString())
+                .setParameter("interval",  interval.toString())
                 .setParameter("endTime", endTime)
                 .setParameter("startTime", startTime)
                 .setParameter("meterDeviceId", meterDeviceId)

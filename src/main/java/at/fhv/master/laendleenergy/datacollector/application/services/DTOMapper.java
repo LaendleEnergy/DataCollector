@@ -33,7 +33,7 @@ public class DTOMapper {
         AverageMeasurementDTO averageMeasurementDTO = new AverageMeasurementDTO(
                 averageMeasurement.getTimeStart(),
                 averageMeasurement.getTimeEnd(),
-                averageMeasurement.getDeviceId(),
+                averageMeasurement.getMeterDeviceId(),
                 averageMeasurement.getCurrentL1AAvg(),
                 averageMeasurement.getCurrentL2AAvg(),
                 averageMeasurement.getCurrentL3AAvg(),

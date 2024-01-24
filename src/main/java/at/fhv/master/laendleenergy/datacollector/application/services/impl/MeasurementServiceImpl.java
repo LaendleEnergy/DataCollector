@@ -63,7 +63,7 @@ public class MeasurementServiceImpl implements MeasurementService {
         String userId = jwt.getClaim("memberId");
         String householdId = jwt.getClaim("householdId");
 
-        List<Measurement> measurements = measurementRepository.getMeasurementsByDeviceIdAndStartAndEndTime(meterDeviceId, startTime, endTime);
+        List<Measurement> measurements = measurementRepository.getMeasurementsByMeterDeviceIdAndStartAndEndTime(meterDeviceId, startTime, endTime);
 
         if(measurements.isEmpty()){
             throw new MeasurementNotFoundException();
@@ -140,7 +140,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     public List<MeasurementDTO> getMeasurementsBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
         String meterDeviceId = jwt.getClaim("deviceId");
         return  measurementRepository
-                .getMeasurementsByDeviceIdAndStartAndEndTime(meterDeviceId, startDate, endDate)
+                .getMeasurementsByMeterDeviceIdAndStartAndEndTime(meterDeviceId, startDate, endDate)
                 .stream()
                 .map(DTOMapper::mapMeasurementToMeasurementDTO)
                 .toList();

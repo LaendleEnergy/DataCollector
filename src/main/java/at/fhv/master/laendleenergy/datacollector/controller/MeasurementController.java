@@ -65,7 +65,7 @@ public class MeasurementController {
         );
     }
 
-    @GetMapping("/averaged/")
+    @GetMapping("/averaged")
     @Operation(summary = "Get averaged measurements associated with own account (via jwt token) for a given timespan.",
             description = "Returns averaged measurements associated with own account (via jwt token) fora  given timespan.\n" +
                     "Measurements can be averaged within a given number of groups XOR within a given interval (day, week, month, year).")
@@ -78,7 +78,7 @@ public class MeasurementController {
                 responseCode = "500", description = "Server Error")}
     )
     @PermitAll
-    public RestResponse getMeasurementsBetweenDates(
+    public RestResponse getAveragedMeasurementsBetweenDates(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("startDate") LocalDateTime startDate,
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") @RequestParam("endDate") LocalDateTime endDate,
             @RequestParam("numberOfGroups") Integer numberOfGroups, @RequestParam("interval") String interval){

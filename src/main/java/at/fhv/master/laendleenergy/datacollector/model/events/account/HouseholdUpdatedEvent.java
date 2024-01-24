@@ -24,4 +24,13 @@ public class HouseholdUpdatedEvent {
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
+
+    public HouseholdUpdatedEvent(String eventId, UpdatedHousehold updatedHousehold, LocalDateTime updateTime) {
+        this.eventId = eventId;
+        this.updatedHousehold = updatedHousehold;
+        this.updateTime = updateTime;
+    }
+
+    public HouseholdUpdatedEvent() {
+    }
 }

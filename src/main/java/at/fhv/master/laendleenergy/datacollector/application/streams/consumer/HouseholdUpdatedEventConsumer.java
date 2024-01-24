@@ -4,11 +4,16 @@ import at.fhv.master.laendleenergy.datacollector.application.streams.EventHandle
 import at.fhv.master.laendleenergy.datacollector.model.events.account.HouseholdUpdatedEvent;
 import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.pubsub.PubSubCommands;
+import jakarta.ejb.Startup;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+
+@ApplicationScoped
+@Startup
 public class HouseholdUpdatedEventConsumer implements Consumer<HouseholdUpdatedEvent> {
     @Inject
     EventHandler eventHandler;
