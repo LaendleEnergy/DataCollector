@@ -14,7 +14,7 @@ public class Tag {
     String deviceName;
 
     @Id
-    @Column(name = "measurement_device_id")
+    @Column(name = "meter_device_id")
     String meterDeviceId;
 
     @Column(name = "devicecategory_category_name")

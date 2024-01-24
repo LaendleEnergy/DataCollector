@@ -38,12 +38,12 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                     "avg(instantaneous_active_power_plus_w) as avg_instantaneous_active_power_plus_w, " +
                                     "avg(instantaneous_active_power_minus_w) as avg_instantaneous_active_power_minus_w, " +
                                     "MIN(reading_time) as t_start, MAX(reading_time) as t_end, " +
-                                    "time_bucket(((SELECT MAX(reading_time) FROM measurement_w_t where reading_time <= :endTime and device_id = :deviceId)" +
-                                    "         - (SELECT MIN(reading_time) FROM measurement_w_t where reading_time >= :startTime and device_id = :deviceId)) / :numberOfGroups, reading_time) as timestamp_start " +
+                                    "time_bucket(((SELECT MAX(reading_time) FROM measurement_w_t where reading_time <= :endTime and meter_device_id = :deviceId)" +
+                                    "         - (SELECT MIN(reading_time) FROM measurement_w_t where reading_time >= :startTime and meter_device_id = :deviceId)) / :numberOfGroups, reading_time) as timestamp_start " +
                                     "FROM measurement_w_t " +
                                     "WHERE reading_time <= :endTime " +
                                     " and reading_time >= :startTime  " +
-                                    " and device_id = :deviceId " +
+                                    " and meter_device_id = :deviceId " +
                                     "GROUP BY timestamp_start " +
                                     "ORDER BY timestamp_start ASC"
                     )
@@ -68,7 +68,7 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                     "FROM measurement_w_t " +
                                     "WHERE reading_time <= :endTime " +
                                     " and reading_time >= :startTime  " +
-                                    " and device_id = :deviceId " +
+                                    " and meter_device_id = :deviceId " +
                                     "ORDER BY t_start ASC"
                     )
                     .setParameter("startTime", startTime)
@@ -96,7 +96,7 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
     }
 
     @Override
-    public List<AveragedMeasurement> getAveragedMeasurementsByDeviceIdAndStartAndEndTimeAndTimeInterval(String deviceId, LocalDateTime startTime, LocalDateTime endTime, Interval interval) {
+    public List<AveragedMeasurement> getAveragedMeasurementsByDeviceIdAndStartAndEndTimeAndTimeInterval(String meterDeviceId, LocalDateTime startTime, LocalDateTime endTime, Interval interval) {
         List<Object[]> measurements = eM.createNativeQuery(
                         "SELECT " +
                                 "avg(current_l1a) as avg_current_l1a, " +
@@ -112,13 +112,13 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
                                 "FROM measurement_w_t " +
                                 "WHERE reading_time <= :endTime " +
                                 " and reading_time >= :startTime  " +
-                                " and device_id = :deviceId " +
+                                " and meter_device_id = :deviceId " +
                                 "GROUP BY timestamp_start " +
                                 "ORDER BY timestamp_start"
                 )
                 .setParameter("startTime", startTime)
                 .setParameter("endTime", endTime)
-                .setParameter("deviceId", deviceId)
+                .setParameter("deviceId", meterDeviceId)
                 .setParameter("interval", interval.toString())
                 .getResultList();
 
@@ -135,8 +135,10 @@ public class AverageMeasurementRepositoryImp implements AverageMeasurementReposi
             float instantaneousActivePowerMinusW = ((Double) m[7]).floatValue();
             LocalDateTime timestampStart = LocalDateTime.ofInstant(((Timestamp) m[8]).toInstant(), ZoneId.systemDefault());
             LocalDateTime timestampEnd = LocalDateTime.ofInstant(((Timestamp) m[9]).toInstant(), ZoneId.systemDefault());
-            return new AveragedMeasurement(timestampStart,timestampEnd, deviceId, currentL1A, currentL2A, currentL3A, voltageL1V, voltageL2V, voltageL3V,
+            return new AveragedMeasurement(timestampStart,timestampEnd, meterDeviceId, currentL1A, currentL2A, currentL3A, voltageL1V, voltageL2V, voltageL3V,
                     instantaneousActivePowerPlusW, instantaneousActivePowerMinusW);
         }).toList();
     }
 }
+
+

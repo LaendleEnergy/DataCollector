@@ -15,7 +15,7 @@ public class MeasurementId implements Serializable {
     @Column(name = "reading_time", columnDefinition = "timestamp")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
-    @Column(name = "device_id")
+    @Column(name = "meter_device_id")
     @JsonProperty("deviceId")
     private String meterDeviceId;
 

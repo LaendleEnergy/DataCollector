@@ -29,16 +29,16 @@ public class AccumulatedRepositoryImp implements AccumulatedMeasurementRepositor
                                 "                                          last(total_energy_delivered_wh, reading_time) - " +
                                 "                                          first(total_energy_delivered_wh, reading_time) AS energy_delivered_wh " +
                                 "                                   FROM measurement_w_t " +
-                                "                                   WHERE device_id = :meterDeviceId " +
+                                "                                   WHERE meter_device_id = :meterDeviceId " +
                                 "                                   AND reading_time <= :endTime " +
                                 "                                   AND reading_time >= :startTime  " +
                                 "                                   GROUP BY time_start " +
                                 "                                   ORDER BY time_start) " +
-                                "SELECT *, CAST(ROUND(CAST((SELECT DISTINCT ON(device_id) \"average_price_wh\" " +
+                                "SELECT *, CAST(ROUND(CAST((SELECT DISTINCT ON(meter_device_id) \"average_price_wh\" " +
                                 "            FROM averagepriceperwh " +
                                 "            WHERE averagepriceperwh.device_id = :meterDeviceId " +
                                 "              AND  averagepriceperwh.start_date <= time_start " +
-                                "            ORDER BY device_id, averagepriceperwh.start_date) AS numeric) * energy_consumed_wh) / 100 AS float4) AS energy_consumed_price_euro " +
+                                "            ORDER BY meter_device_id, averagepriceperwh.start_date) AS numeric) * energy_consumed_wh) / 100 AS float4) AS energy_consumed_price_euro " +
                                 "FROM measurements_accumuluated")
                 .setParameter("interval", "1 " + interval.toString())
                 .setParameter("endTime", endTime)

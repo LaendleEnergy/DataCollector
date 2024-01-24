@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "averagepriceperwh")
 public class AveragePricePerWh {
     @Id
-    @Column(name = "device_id")
+    @Column(name = "meter_device_id")
     String meterDeviceId;
     @Id
     @Column(name = "start_date")

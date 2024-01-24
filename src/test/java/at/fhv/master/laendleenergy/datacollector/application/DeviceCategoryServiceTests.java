@@ -4,7 +4,6 @@ import at.fhv.master.laendleenergy.datacollector.controller.dto.DeviceCategoryDT
 import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.exception.DeviceCategoryAlreadyExistsException;
 import at.fhv.master.laendleenergy.datacollector.model.repositories.DeviceCategoryRepository;
-import at.fhv.master.laendleenergy.datacollector.model.repositories.DeviceRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -12,9 +11,6 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;

@@ -16,7 +16,7 @@ public class TagUserType extends ListArrayType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
-        String deviceId = rs.getString("device_id");
+        String deviceId = rs.getString("meter_device_id");
         String json = rs.getString(position);
         if(json != null){
             json = json.replaceAll("(?<=\\{)\\\"|\\\"(?=})|(\\\\)|(?<=\\))\\\"|\\\"(?=\\()", "");

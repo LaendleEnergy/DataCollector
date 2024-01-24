@@ -9,7 +9,7 @@ public class Device {
     @Id
     private String name;
     @Id
-    @Column(name = "device_id")
+    @Column(name = "meter_device_id")
     private String meterDeviceId;
     @ManyToOne
     @JoinColumn(name = "category_name")
