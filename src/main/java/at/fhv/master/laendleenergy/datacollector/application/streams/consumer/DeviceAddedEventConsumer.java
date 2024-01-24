@@ -30,7 +30,12 @@ public class DeviceAddedEventConsumer implements Consumer<DeviceAddedEvent> {
     @Override
     public void accept(DeviceAddedEvent deviceAddedEvent) {
         CompletableFuture.runAsync(() -> {
-            eventHandler.handleDeviceAddedEvent(deviceAddedEvent);
+            try {
+                eventHandler.handleDeviceAddedEvent(deviceAddedEvent);
+            }catch (Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
         });
     }
 

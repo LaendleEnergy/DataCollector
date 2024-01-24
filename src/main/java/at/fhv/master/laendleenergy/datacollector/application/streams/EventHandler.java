@@ -37,12 +37,12 @@ public class EventHandler {
         Optional<DeviceCategory> deviceCategoryOpt = deviceCategoryRepository.getDeviceCategoryByName(deviceAddedEvent.getDeviceCategoryName());
         Device device;
         if(deviceCategoryOpt.isPresent()) {
-            device = new Device(deviceAddedEvent.getDeviceId(), deviceAddedEvent.getDeviceName(), deviceCategoryOpt.get());
+            device = new Device(deviceAddedEvent.getDeviceName(), deviceAddedEvent.getDeviceId(), deviceCategoryOpt.get());
         }
         else{
             DeviceCategory deviceCategory = new DeviceCategory(deviceAddedEvent.getDeviceCategoryName());
             deviceCategoryRepository.saveDeviceCategory(deviceCategory);
-            device = new Device(deviceAddedEvent.getDeviceId(), deviceAddedEvent.getDeviceName(), deviceCategoryOpt.get());
+            device = new Device(deviceAddedEvent.getDeviceName(), deviceAddedEvent.getDeviceId(), deviceCategory);
         }
         deviceRepository.saveDevice(device);
     }

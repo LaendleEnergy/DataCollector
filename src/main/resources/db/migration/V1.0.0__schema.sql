@@ -135,7 +135,7 @@ CREATE OR REPLACE FUNCTION insert_tag_trigger_fkt()
         SELECT tsrange(NEW.time_start, NEW.time_end), NEW.devicecategory_category_name, NEW.meter_device_id, NEW.device_name;
         RETURN NEW;
     EXCEPTION
-        WHEN exclusion_violation THEN
+        WHEN exclusion_violation OR unique_violation THEN
             WITH deleted_rows AS (DELETE FROM tag
             WHERE tsrange(NEW.time_start, NEW.time_end) && tag.reading_timerange
                     AND meter_device_id = NEW.meter_device_id

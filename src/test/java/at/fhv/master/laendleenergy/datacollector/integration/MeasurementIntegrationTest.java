@@ -3,7 +3,6 @@ import at.fhv.master.laendleenergy.datacollector.application.enums.Interval;
 import at.fhv.master.laendleenergy.datacollector.controller.MeasurementController;
 import at.fhv.master.laendleenergy.datacollector.model.AccumulatedMeasurements;
 import at.fhv.master.laendleenergy.datacollector.model.AveragedMeasurement;
-import at.fhv.master.laendleenergy.datacollector.model.DeviceCategory;
 import at.fhv.master.laendleenergy.datacollector.model.Measurement;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -160,7 +159,7 @@ public class MeasurementIntegrationTest {
 
     @Test
     void addTagToMeasurementsTest(){
-        
+
 
     }
 

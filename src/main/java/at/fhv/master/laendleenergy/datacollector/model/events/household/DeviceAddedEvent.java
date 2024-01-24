@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 public class DeviceAddedEvent {
     @JsonProperty
     private String eventId;
-    @JsonProperty
+    @JsonProperty("name")
     private String deviceName;
-    @JsonProperty
+    @JsonProperty("categoryName")
     private String deviceCategoryName;
     @JsonProperty
     private String deviceId;
